@@ -5,6 +5,7 @@ import hashlib
 def hash(filename, chunk_size=9500):
   # the ed2k hash object
   ed2k_hash = hashlib.new("md4")
+  test = []
 
   with open(filename, "rb") as f:
     while True:
@@ -12,8 +13,8 @@ def hash(filename, chunk_size=9500):
       chunk = f.read(1024 * chunk_size)
       if chunk:
         # calculate the md4 for the chunk and update the ed2k hash
-        hash = hashlib.new("md4", chunk).hexdigest()
-        ed2k_hash.update(hash.encode("utf-8"))
+        hash = hashlib.new("md4", chunk)
+        ed2k_hash.update(hash.digest())
       else:
         break
 
