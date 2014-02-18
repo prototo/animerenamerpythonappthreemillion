@@ -48,6 +48,3 @@ class Request:
     if not group:
       return None
     return group.groupdict()
-
-    connection.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    connection.sock.bind(('', CLIENT_PORT))
