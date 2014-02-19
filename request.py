@@ -20,7 +20,7 @@ class Request:
       self.params['s'] = connection.session
     params = urllib.urlencode(self.params)
     location = "{0} {1}".format(self.location, params)
-    print("Sending request to: " + location)
+    # print("Sending request to: " + location)
     return bytes(location)
 
   # send the request and return the data we get back
@@ -31,8 +31,8 @@ class Request:
       sleep(1)
     connection.sock.sendto(location, (API_ADDR, API_PORT))
     data, addr = connection.sock.recvfrom(1400)
-    data = data.decode("utf-8")
-    print("Got: " + data)
+    data = data.decode("utf-8").replace("\n", "")
+    # print("Got: " + data)
 
     # update the last_request time
     connection.last_request = time()

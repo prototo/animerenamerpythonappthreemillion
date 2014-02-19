@@ -40,9 +40,13 @@ class LogoutRequest(Request):
 class FileRequest(Request):
   location = "FILE"
   params = {
-    "fmask": "4008800880",
+    # |aid|crc32|resolution|description|mylist state|
+    "fmask": "4008021080",
+
+    # |total episodes|english name|episode number|episode name|group name|
     "amask": "8020C080"
   }
+  response_regex = r"^.*\|(?P<name>.+)\|(?P<number>\d+)\|(?P<title>.+)\|.*$"
 
   def __init__(self, filename):
     # set the size and hash of the file in the request parameters
