@@ -36,17 +36,32 @@ class LogoutRequest(Request):
   ANIME DATA
 """
 
+# get episode data by aid and ep no
+class EpisodeRequest(Request):
+  location = "EPISODE"
+  zip_params = [
+    "eid", "aid", "length", "rating", "votes",
+    "epno", "title", "kanji", "aired", "type"
+  ]
+
+  def __init__(self, aid, episode_number):
+    self.params['aid'] = aid
+    self.params['epno'] = episode_number
+
 # get data by file hash
 class FileRequest(Request):
   location = "FILE"
   params = {
-    # |aid|crc32|resolution|description|mylist state|
+    # aid|crc32|resolution|description|mylist state
     "fmask": "4008021080",
-
-    # |total episodes|english name|episode number|episode name|group name|
+    # total episodes|english name|episode number|episode name|group name
     "amask": "8020C080"
   }
-  response_regex = r"^.*\|(?P<name>.+)\|(?P<number>\d+)\|(?P<title>.+)\|.*$"
+  zip_params = [
+    "fid",  # fid is always sent
+    "aid", "crc", "res", "desc", "mylist",  # fmask
+    "episodes", "name", "epno", "title", "group"  # amask
+  ]
 
   def __init__(self, filename):
     # set the size and hash of the file in the request parameters

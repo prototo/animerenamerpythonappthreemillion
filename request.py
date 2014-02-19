@@ -12,6 +12,7 @@ class Request:
   location = ""
   params = {}
   response_regex = None
+  zip_params = None
   requires_session = True # most requests do
 
   # return the location for this request in bytes format
@@ -31,20 +32,43 @@ class Request:
       sleep(1)
     connection.sock.sendto(location, (API_ADDR, API_PORT))
     data, addr = connection.sock.recvfrom(1400)
-    data = data.decode("utf-8").replace("\n", "")
+    res = data.decode("utf-8").replace("\n", " ")
     # print("Got: " + data)
 
     # update the last_request time
     connection.last_request = time()
 
+    # if we got anything other than a 2XX response return None
+    if not self.wasSuccessful(res):
+      return None
+
     # if we have a regex get the dictionary of useful values
     if self.response_regex:
-      return self.matchResponse(data)
-    return data
+      return self.matchResponse(res)
+    elif self.zip_params:
+      return self.zipResponse(res)
+    return res
 
   # gets a dictionary of named groups
-  def matchResponse(self, data):
-    group = re.match(self.response_regex, data)
+  def matchResponse(self, res):
+    group = re.match(self.response_regex, res)
     if not group:
       return None
     return group.groupdict()
+
+  # zip the response data with the parameter names
+  def zipResponse(self, res):
+    # [2] should be the response data we want
+    res = res.split(" ", 2)[2]
+    res = res.split("|")
+    # this replaces all the empty strings in res with 0s
+    res = [val or "null" for val in res]
+    data = dict(zip(self.zip_params, res))
+    return data
+
+  # check that the status code of the response was a 2XX
+  def wasSuccessful(self, res):
+    status = res.split(" ")[0]
+    status = int(status)
+    return status > 199 and status < 300
+      
