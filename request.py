@@ -3,8 +3,8 @@
 from config import *
 import socket
 import re
-import urllib
 import connection
+from urllib.parse import urlencode
 from time import time, sleep
 
 # The request class that all the other requests can inherit
@@ -19,10 +19,10 @@ class Request:
   def getLocation(self):
     if (connection.session):
       self.params['s'] = connection.session
-    params = urllib.urlencode(self.params)
+    params = urlencode(self.params)
     location = "{0} {1}".format(self.location, params)
     # print("Sending request to: " + location)
-    return bytes(location)
+    return location
 
   # send the request and return the data we get back
   # this method is blocking
@@ -30,10 +30,10 @@ class Request:
     location = self.getLocation()
     while (time() - connection.last_request) < 2:
       sleep(1)
-    connection.sock.sendto(location, (API_ADDR, API_PORT))
-    data, addr = connection.sock.recvfrom(1400)
-    res = data.decode("utf-8").replace("\n", " ")
-    # print("Got: " + data)
+    connection.sock.sendto(bytes(location.encode()), (API_ADDR, API_PORT))
+    data = connection.sock.recv(1400)
+    res = data.decode().strip().replace("\n", " ")
+    # print("Got: " + res)
 
     # update the last_request time
     connection.last_request = time()
@@ -61,8 +61,8 @@ class Request:
     # [2] should be the response data we want
     res = res.split(" ", 2)[2]
     res = res.split("|")
-    # this replaces all the empty strings in res with 0s
-    res = [val or "null" for val in res]
+    # this replaces all the empty strings in res with None
+    res = [val or None for val in res]
     data = dict(zip(self.zip_params, res))
     return data
 

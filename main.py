@@ -5,6 +5,22 @@ import os
 import re
 from endpoints import *
 
+store_root = "/home/greg/media/anime"
+
+# could just pass in the data block and have a format string for file name
+def renameEpisode(filepath, name, epno, title):
+  if len(str(epno)) == 1:
+    epno = "0" + str(epno)
+
+  filename, extension = os.path.splitext(filepath)
+  new_filename = "{0} - {1} {2}{3}".format(name, epno, title, extension)
+  new_filepath = os.sep.join([store_root, name, new_filename])
+  try:
+    os.renames(filepath, new_filepath)
+    print("{0} => {1}".format(os.path.basename(filepath), os.path.basename(new_filepath)))
+  except OSError:
+    pass  # should probably actually do something here
+
 # request the episode data for the given file
 def getEpisodeData(filepath, aid = None):
   epno_regex = r"[ _-](\d{1,2})[ _-v]"
@@ -24,23 +40,39 @@ def getEpisodeData(filepath, aid = None):
 # walk down the given directory and get data for any episodes found
 def parseDirectory(dirpath):
   for (path, dirs, files) in os.walk(dirpath):
+    if len(dirs):
+      print("Found folders in " + path + ", not risking it")
+      continue
+
     name = None
     aid = None
     for file in files:
-      filepath = os.sep.join([path, file])
+      filepath = path + file
       data = getEpisodeData(filepath, aid)
 
       # extract and normalise the data
-      if 'aid' in data:
-        aid = data['aid']
+      if not aid:
+        aid = data.get('aid', None)
 
-      if 'name' in data:
-        name = data['name']
-      elif name:
-        data['name'] = name
+      if not name:
+        name = data.get('name') or data.get('romaji_name')
+        if not name:
+          print("Didn't find anime name")
+          print(data)
+          break
 
-      # show what we got
-      print("{name}: {epno} {title}".format(**data))
+      epno = data.get('epno')
+      title = data.get('title') or data.get('romaji_title')
+
+      # if we've got everything we need rename the file
+      if name and epno and title:
+        renameEpisode(filepath, name, data['epno'], data['title'])
+
+    # delete the current dir if it's empty
+    try:
+      os.rmdir(path)
+    except OSError:
+      pass
 
 # filepath
 dirpath = sys.argv[1]
@@ -64,7 +96,7 @@ if int(res['status']) in (200, 201):
     # if something breaks logout
     logout.doRequest()
     print("Errors happened")
-    print "Unexpected error:", sys.exc_info()[0]
+    print("Unexpected error:", sys.exc_info()[0])
     exit(1)
 
   # finally logout
