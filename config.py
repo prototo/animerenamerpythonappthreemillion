@@ -10,5 +10,6 @@ CLIENT_NAME = 'arpatm'
 CLIENT_VERSION = 0
 CLIENT_PORT = 1024  # don't know why I chose this
 
-username = 'prototo'
-password = 'lol'
+username = 'username'
+password = 'password'
+store = '/home/user/anime'

@@ -1,20 +1,25 @@
 #!/bin/env python
 
-import sys
-import os
-import re
+import sys, os, re
+import config
 from endpoints import *
 
-store_root = "/home/greg/media/anime"
+store = ""
+try:
+  store = config.store
+except:
+  pass
 
 # could just pass in the data block and have a format string for file name
 def renameEpisode(filepath, name, epno, title):
   if len(str(epno)) == 1:
     epno = "0" + str(epno)
-
   filename, extension = os.path.splitext(filepath)
-  new_filename = "{0} - {1} {2}{3}".format(name, epno, title, extension)
-  new_filepath = os.sep.join([store_root, name, new_filename])
+
+  # replace any forward slash with backslashes for the file names
+  new_filename = "{0} - {1} {2}{3}".format(name, epno, title, extension).replace("/", "\\")
+  new_filepath = os.sep.join([store, name, new_filename])
+
   try:
     os.renames(filepath, new_filepath)
     print("{0} => {1}".format(os.path.basename(filepath), os.path.basename(new_filepath)))
