@@ -23,7 +23,8 @@ def renameEpisode(filepath, name, epno, title):
   try:
     os.renames(filepath, new_filepath)
     print("{0} => {1}".format(os.path.basename(filepath), os.path.basename(new_filepath)))
-  except OSError:
+  except OSError as e:
+    print(e)
     pass  # should probably actually do something here
 
 # request the episode data for the given file
@@ -60,7 +61,7 @@ def parseDirectory(dirpath):
         aid = data.get('aid', None)
 
       if not name:
-        name = data.get('name') or data.get('romaji_name')
+        name = data.get('romaji_name') or data.get('name')
         if not name:
           print("Didn't find anime name")
           print(data)
