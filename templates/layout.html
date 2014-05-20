@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{% block title %}{% endblock %} - ARPATM</title>
+    <!-- style sheets and stuff -->
+    {% include "links.html" ignore missing %}
+  </head>
+  <body>
+
+    <header>
+      {% include "header.html" ignore missing %}
+    </header>
+
+    <div id="content">
+      {% block body %}{% endblock %}
+    </div>
+
+    <footer>
+      {% include "footer.html" ignore missing %}
+    </footer>
+
+  </body>
+</html>

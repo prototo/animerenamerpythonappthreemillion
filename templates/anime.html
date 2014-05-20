@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div id="anime">
+  <h1 class="title">
+    {{ anime.getTitle()['en'] }} ({{ anime.getTitle()['x-jat'] }})
+  </h1>
+  <img class="cover" src="{{ anime.getPicture() }}" />
+  <p class="description">
+    {{ anime.getDescription() }}
+  </p>
+</div>
+{% endblock %}

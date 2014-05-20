@@ -9,8 +9,7 @@ def anime(aid):
   anime = Anime(aid)
   if anime == None:
     return "That AID isn't right"
-  titles = anime.getTitle()
-  return "{en} ({x-jat})".format(**titles)
+  return render_template("anime.html", anime=anime)
 
 if __name__ == "__main__":
   app.run(debug=True)
