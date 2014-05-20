@@ -22,8 +22,7 @@ div#content h1.title {
 
 div#content img.cover {
   display: inline-block;
-  width: 20em;
-  height: auto;
+  width: 30em;
   margin: 0 1em 0 0; 
 }
 
@@ -31,7 +30,7 @@ div#content p.description {
   display: inline-block;
   margin: 0;
   padding: 0;
-  width: 75em;
+  width: 65em;
   text-align: justify;
   vertical-align: top;
 }

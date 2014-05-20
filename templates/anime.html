@@ -5,7 +5,7 @@
   <h1 class="title">
     {{ anime.getTitle()['en'] }} ({{ anime.getTitle()['x-jat'] }})
   </h1>
-  <img class="cover" src="{{ anime.getPicture() }}" />
+  <img class="cover" src="/images{{ anime.getPicture()  }}" />
   <p class="description">
     {{ anime.getDescription() }}
   </p>
