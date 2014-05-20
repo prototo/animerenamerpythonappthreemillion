@@ -63,15 +63,15 @@ class EpisodeRequest(Request):
 class FileRequest(Request):
   location = "FILE"
   params = {
-    # aid|crc32|quality|codec|bitrate|resolution|description|mylist state
-    "fmask": "40088E1080",
-    # total episodes|romaji name|english name|ep number|english title|romaji title|group
-    "amask": "80A0E080"
+    # aid|eid|ed2k|quality|codec|bitrate|resolution|description|mylist state
+    "fmask": "60408E1080",
+    # total episodes|romaji name|kanji name|english name|ep number|english title|romaji title|kanji title|group
+    "amask": "80E0F080"
   }
   zip_params = [
     "fid",  # fid is always sent
-    "aid", "crc", "quality", "codec", "bitrate", "res", "desc", "mylist_state",  # fmask
-    "epcount", "romaji_name", "name", "epno", "title", "romaji_title", "group" # amask
+    "aid", "eid", "ed2k", "quality", "codec", "bitrate", "res", "desc", "mylist_state",  # fmask
+    "epcount", "romaji_name", "kanji_name", "name", "epno", "title", "romaji_title", "kanji_title", "group" # amask
   ]
 
   def __init__(self, filename):

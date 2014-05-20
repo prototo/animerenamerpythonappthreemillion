@@ -15,7 +15,7 @@ def images(filename):
 @app.route('/anime/<aid>')
 def anime(aid):
   anime = Anime(aid)
-  if anime == None:
+  if anime.xml == None:
     return "That AID isn't right"
   return render_template("anime.html", anime=anime)
 

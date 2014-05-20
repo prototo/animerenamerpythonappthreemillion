@@ -4,6 +4,8 @@ import sys, os, re
 import config
 from endpoints import *
 
+import indexer
+
 store = ""
 try:
   store = config.store
@@ -32,6 +34,8 @@ def getEpisodeData(filepath, aid = None):
   epno_regex = r"[ _-](\d{1,2})[ _-v]"
   if os.path.isfile(filepath):
     request = None
+
+    """
     if aid:
       try:
         epno = re.search(epno_regex, os.path.basename(filepath)).group(1)
@@ -40,8 +44,17 @@ def getEpisodeData(filepath, aid = None):
         request = FileRequest(filepath)
     else:
       request = FileRequest(filepath)
-    data = request.doRequest()
-    return data
+    """
+
+    file_request = FileRequest(filepath)
+    file_data = file_request.doRequest()
+
+    indexer.indexFile(filepath, **file_data)
+    indexer.indexEpisode(**file_data)
+    indexer.indexAnime(**file_data)
+
+    # data = request.doRequest()
+    return file_data
 
 # walk down the given directory and get data for any episodes found
 def parseDirectory(dirpath):
@@ -72,7 +85,8 @@ def parseDirectory(dirpath):
 
       # if we've got everything we need rename the file
       if name and epno and title:
-        renameEpisode(filepath, name, data['epno'], data['title'])
+        pass
+        # renameEpisode(filepath, name, data['epno'], data['title'])
 
     # delete the current dir if it's empty
     try:
@@ -95,15 +109,7 @@ res = auth.doRequest()
 if int(res['status']) in (200, 201):
   print("Logged in with session " + res['session'])
 
-  try:
-    # parse the directory for ANIMEZ
-    parseDirectory(dirpath)
-  except:
-    # if something breaks logout
-    logout.doRequest()
-    print("Errors happened")
-    print("Unexpected error:", sys.exc_info()[0])
-    exit(1)
+  parseDirectory(dirpath)
 
   # finally logout
   logout.doRequest()
