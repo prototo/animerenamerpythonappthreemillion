@@ -19,26 +19,18 @@ class Anime:
 			return None
 		self.root = etree.fromstring(self.xml)
 
+
 	def getType(self):
 		type = self.root.find('type')
-		if type is None:
-			return None
-		else:
-			return type.text
+		return self.elementText(type)
 
 	def getEpisodecount(self):
 		episodecount = self.root.find('episodecount')
-		if episodecount is None:
-			return None
-		else:
-			return episodecount.text
+		return self.elementText(episodecount)
 
 	def getStartdate(self):
 		startdate = self.root.find('startdate')
-		if startdate is None:
-			return None
-		else:
-			return startdate.text
+		return self.elementText(startdate)
 
 	def getTitle(self):
 		dict = {}
@@ -51,10 +43,7 @@ class Anime:
 
 	def getDescription(self):
 		description = self.root.find('description')
-		if description is None:
-			return None
-		else:
-			return description.text	
+		return self.elementText(description)
 
 	# images pulled to image_store/aid.jpg
 	def getPicture(self):
@@ -116,6 +105,13 @@ class Anime:
 				a[epno]['title'] = dict				
 
 		return a
+
+	#
+	def elementText(self, element):
+		if element is None:
+			return None
+		else:
+			return element.text
 
 
 class AnimeFetcher:
