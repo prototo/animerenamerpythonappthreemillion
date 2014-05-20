@@ -35,6 +35,17 @@ class LogoutRequest(Request):
 """
   ANIME DATA
 """
+#get anime data by aid
+class AnimeRequest(Request):
+  location = "ANIME"
+  amask = "b2208400000000"
+  zip_params = [
+      "aid", "year", "type", "category", "eng_name", "episodes", "url"
+  ]
+
+  def __init__(self, aid):
+    self.params['aid'] = aid
+    self.params['amask'] = self.amask
 
 # get episode data by aid and ep no
 class EpisodeRequest(Request):
@@ -67,4 +78,3 @@ class FileRequest(Request):
     # set the size and hash of the file in the request parameters
     self.params["size"] = os.path.getsize(filename)
     self.params["ed2k"] = ed2k.hash(filename)
-
