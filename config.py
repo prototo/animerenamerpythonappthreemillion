@@ -16,5 +16,5 @@ HTTP_PROTOVER = 1
 
 username = 'user'
 password = 'pass'
-store = '/home/user/anime'
-data_store = '/home/user/arpatm/data/'
+store = '/media/greg/media/anime'
+data_store = '/media/greg/media/anime/data'
