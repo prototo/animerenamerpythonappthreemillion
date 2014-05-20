@@ -32,22 +32,13 @@ def renameEpisode(filepath, name, epno, title):
 # request the episode data for the given file
 def getEpisodeData(filepath, aid = None):
   epno_regex = r"[ _-](\d{1,2})[ _-v]"
+
   if os.path.isfile(filepath):
-    request = None
-
-    """
-    if aid:
-      try:
-        epno = re.search(epno_regex, os.path.basename(filepath)).group(1)
-        request = EpisodeRequest(aid, epno)
-      except:
-        request = FileRequest(filepath)
-    else:
-      request = FileRequest(filepath)
-    """
-
     file_request = FileRequest(filepath)
     file_data = file_request.doRequest()
+
+    if not file_data:
+      return False
 
     indexer.indexFile(filepath, **file_data)
     indexer.indexEpisode(**file_data)
@@ -58,16 +49,29 @@ def getEpisodeData(filepath, aid = None):
 
 # walk down the given directory and get data for any episodes found
 def parseDirectory(dirpath):
+  indexable = ['.avi', '.mkv', '.mp4']
+
   for (path, dirs, files) in os.walk(dirpath):
-    if len(dirs):
-      print("Found folders in " + path + ", not risking it")
-      continue
+    # recurse through all the subdirs
+    for dir in dirs:
+      dirpath = path + dir
+      parseDirectory(dirpath)
 
     name = None
     aid = None
     for file in files:
-      filepath = path + file
+      extension = os.path.splitext(file)[1]
+      if not extension in indexable:
+        continue
+
+      filepath = os.sep.join([path, file])
+      # if the file has been previously indexed, skip it
+      if indexer.exists('files', 'path', filepath):
+        continue
+
       data = getEpisodeData(filepath, aid)
+      if not data:
+        continue
 
       # extract and normalise the data
       if not aid:
