@@ -1,5 +1,6 @@
 from config import *
 from urllib.parse import urlencode
+from urllib.request import urlretrieve
 import httplib2
 import os.path
 import xml.etree.ElementTree as etree
@@ -7,8 +8,10 @@ import xml.etree.ElementTree as etree
 class Anime:
 	xml = None #raw utf-8 string 
 	root = None #root element
+	aid = None
 
 	def __init__(self, aid):
+		self.aid = aid
 		self.xml = AnimeFetcher(aid).getXML()
 		# no XML? AnimeFetcher failed but couldn't do anything about it due to poor design
 		# raise noSuchAnimeError somewhere?
@@ -53,13 +56,29 @@ class Anime:
 		else:
 			return description.text	
 
+	# images pulled to image_store/aid.jpg
 	def getPicture(self):
+		path = image_store + str(self.aid) + '.jpg'
+
+		# check locally first
+		if os.path.isfile(path):
+			print("Picture: we got it")
+			return path
+
+		# gonna have to be the internets	
 		base = 'http://img7.anidb.net/pics/anime/'
 		location = self.root.find('picture')
 		if location is None:
 			return None
 		else:
-			return base+location.text
+			try:
+				#print('urllib.request.urlretrieve({0}{1})'.format(base, location.text))
+				path, headers = urlretrieve(base+location.text, path)
+				return path
+			except:
+				print("Who knows... No pictures though")
+				return None
+
 
 	def getCategories(self):
 		#dict = {}
