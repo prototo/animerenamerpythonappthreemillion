@@ -70,8 +70,8 @@ class FileRequest(Request):
   }
   zip_params = [
     "fid",  # fid is always sent
-    "aid", "eid", "ed2k", "quality", "codec", "bitrate", "res", "desc", "mylist_state",  # fmask
-    "epcount", "romaji_name", "kanji_name", "name", "epno", "title", "romaji_title", "kanji_title", "group" # amask
+    "aid", "eid", "ed2k", "quality", "codec", "bitrate", "resolution", "description", "mylist_state",  # fmask
+    "episode_count", "name_ro", "name_jp", "name", "epno", "title", "title_ro", "title_jp", "group" # amask
   ]
 
   def __init__(self, filename):

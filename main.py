@@ -3,8 +3,7 @@
 import sys, os, re
 import config
 from endpoints import *
-
-import indexer
+import index
 
 store = ""
 try:
@@ -30,19 +29,32 @@ def renameEpisode(filepath, name, epno, title):
     pass  # should probably actually do something here
 
 # request the episode data for the given file
-def getEpisodeData(filepath, aid = None):
+def getEpisodeData(filepath):
   epno_regex = r"[ _-](\d{1,2})[ _-v]"
+
+  if index.file_path_exists(filepath):
+    print("Previously indexed", filepath)
+    return False
 
   if os.path.isfile(filepath):
     file_request = FileRequest(filepath)
     file_data = file_request.doRequest()
 
     if not file_data:
+      print("Couldn't retrieve data for", filepath)
       return False
 
-    indexer.indexFile(filepath, **file_data)
-    indexer.indexEpisode(**file_data)
-    indexer.indexAnime(**file_data)
+    data = file_data.copy()
+    data.update({ 'path' : filepath })
+    index.add_file(**data)
+
+    data['id'] = data.get('eid', None)
+    index.add_episode(**data)
+
+    data['id'] = data.get('aid', None)
+    index.add_anime(**data)
+
+    print("")
 
     # data = request.doRequest()
     return file_data
@@ -64,14 +76,14 @@ def parseDirectory(dirpath):
       if not extension in indexable:
         continue
 
-      filepath = os.sep.join([path, file])
-      # if the file has been previously indexed, skip it
-      if indexer.exists('files', 'path', filepath):
-        continue
+      filepath = os.path.join(path, file)
 
-      data = getEpisodeData(filepath, aid)
+      data = getEpisodeData(filepath)
       if not data:
         continue
+
+      # bail out here because I'm irresponsible and can't be bothered to tidy this up
+      continue
 
       # extract and normalise the data
       if not aid:
@@ -81,7 +93,6 @@ def parseDirectory(dirpath):
         name = data.get('romaji_name') or data.get('name')
         if not name:
           print("Didn't find anime name")
-          print(data)
           break
 
       epno = data.get('epno')

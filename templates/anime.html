@@ -9,5 +9,12 @@
   <p class="description">
     {{ anime.getDescription() }}
   </p>
+  <ul class="files">
+    {% for file in files %}
+      <li>
+        {{ file.path }}
+      </li>
+    {% endfor %}
+  </ul>
 </div>
 {% endblock %}

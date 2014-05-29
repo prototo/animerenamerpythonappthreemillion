@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<ul>
+  {% for a in anime %}
+    <li>
+      <a href="/anime/{{ a.id }}">{{ a.name or a.name_ro or a.name_jp }} ({{ a.files | length }} files)</a>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}
