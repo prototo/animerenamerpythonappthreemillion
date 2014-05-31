@@ -18,9 +18,28 @@ class File(Base):
   path = Column(String)
   aid = Column(Integer, ForeignKey('anime.id'))
   eid = Column(Integer, ForeignKey('episodes.id'))
-
+  
   def __repr__(self):
     return self.path
+
+class Episode(Base):
+  __tablename__ = 'episodes'
+
+  id = Column(Integer, primary_key=True, unique=True)
+  aid = Column(Integer, ForeignKey('anime.id'))
+  epno = Column(Integer)
+  title = Column(String)
+  title_ro = Column(String)
+  title_jp = Column(String)
+  aired_date = Column(Date)
+
+  files = relationship("File", backref="episode")
+
+  def __repr__(self):
+    return self.get_title()
+
+  def get_title(self):
+    return self.title or self.title_ro or self.title_jp
 
 class Anime(Base):
   __tablename__ = 'anime'
@@ -35,32 +54,14 @@ class Anime(Base):
   start_date = Column(Date)
   end_date = Column(Date)
 
-  files = relationship("File", order_by=File.path)
+  files = relationship("File", order_by=File.path, backref="anime")
+  episodes = relationship("Episode", order_by=Episode.epno, backref="anime")
 
   def __repr__(self):
     return self.get_name()
 
   def get_name(self):
     return self.name or self.name_ro or self.name_jp
-
-class Episode(Base):
-  __tablename__ = 'episodes'
-
-  id = Column(Integer, primary_key=True, unique=True)
-  aid = Column(Integer, ForeignKey('anime.id'))
-  epno = Column(Integer)
-  title = Column(String)
-  title_ro = Column(String)
-  title_jp = Column(String)
-  aired_date = Column(Date)
-
-  file = relationship("File", uselist=False, backref="episode")
-
-  def __repr__(self):
-    return self.get_title()
-
-  def get_title(self):
-    return self.title or self.title_ro or self.title_jp
 
 Base.metadata.create_all(engine)
 
