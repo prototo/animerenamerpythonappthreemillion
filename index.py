@@ -38,6 +38,9 @@ class Anime(Base):
   files = relationship("File", order_by=File.path)
 
   def __repr__(self):
+    return self.get_name()
+
+  def get_name(self):
     return self.name or self.name_ro or self.name_jp
 
 class Episode(Base):
@@ -51,7 +54,12 @@ class Episode(Base):
   title_jp = Column(String)
   aired_date = Column(Date)
 
+  file = relationship("File", uselist=False, backref="episode")
+
   def __repr__(self):
+    return self.get_title()
+
+  def get_title(self):
     return self.title or self.title_ro or self.title_jp
 
 Base.metadata.create_all(engine)
@@ -119,11 +127,11 @@ def add_anime(**kwargs):
 
 def get_anime(aid):
   with session_scope() as session:
-    q = session.query(Anime).options(joinedload('files')).filter(Anime.id == aid).first()
+    q = session.query(Anime).options(joinedload('*')).filter(Anime.id == aid).first()
     return q
 
 def get_all_anime():
   with session_scope() as session:
-    q = session.query(Anime).options(joinedload('files')).all()
+    q = session.query(Anime).options(joinedload('*')).all()
     return q
 
