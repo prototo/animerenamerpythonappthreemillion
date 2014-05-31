@@ -19,10 +19,12 @@ def anime(aid):
   anime = Anime(aid)
   if anime.xml == None:
     return "That AID isn't right"
-  files = index.get_anime(aid).files
-  return render_template("anime.html", anime=anime, files=files)
+  indexed_anime = index.get_anime(aid)
+  episodes = indexed_anime.episodes if indexed_anime is not None else []
+  return render_template("anime.html", anime=anime, episodes=episodes)
 
-@app.route('/index/anime')
+#@app.route('/index/anime')
+@app.route('/')
 def indexed_anime():
   print("HI")
   anime = index.get_all_anime()

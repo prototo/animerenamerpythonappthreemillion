@@ -10,9 +10,12 @@
     {{ anime.getDescription() }}
   </p>
   <ul class="files">
-    {% for file in files %}
+    {% for episode in episodes %}
       <li>
-        {{ file.path }}
+        <h4>{{ episode.epno }}: {{ episode.get_title() }}</h4>
+        {% if episode,files|length > 0 %}
+          <p>Onwed: {{ episode.files[0].path }}</p>
+        {% endif %}
       </li>
     {% endfor %}
   </ul>
