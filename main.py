@@ -4,6 +4,9 @@ import sys, os, re
 import config
 from endpoints import *
 import index
+from animeinfo import Anime
+import datetime
+import traceback
 
 store = ""
 try:
@@ -28,6 +31,8 @@ def renameEpisode(filepath, name, epno, title):
     print(e)
     pass  # should probably actually do something here
 
+# TODO: turn this file into some kind of class
+
 # request the episode data for the given file
 def getEpisodeData(filepath):
   epno_regex = r"[ _-](\d{1,2})[ _-v]"
@@ -44,17 +49,16 @@ def getEpisodeData(filepath):
       print("Couldn't retrieve data for", filepath)
       return False
 
+    # index the file
     data = file_data.copy()
     data.update({ 'path' : filepath })
     index.add_file(**data)
 
-    data['id'] = data.get('eid', None)
-    index.add_episode(**data)
-
-    data['id'] = data.get('aid', None)
-    index.add_anime(**data)
-
-    print("")
+    # TODO: update the anime/episodes indexes for running shows
+    # create an animeinfo object to do the HTTP API request and auto index the data for us
+    aid = data['aid']
+    if not index.get_anime(aid):
+        Anime(aid)
 
     # data = request.doRequest()
     return file_data
@@ -124,9 +128,14 @@ res = auth.doRequest()
 if int(res['status']) in (200, 201):
   print("Logged in with session " + res['session'])
 
-  parseDirectory(dirpath)
-
-  # finally logout
-  logout.doRequest()
-  print("End")
+  try:
+    parseDirectory(dirpath)
+  except Exception as e:
+    traceback.print_tb(sys.last_traceback)
+    print(e)
+  finally:
+    # finally logout
+    print("logging out...")
+    logout.doRequest()
+    print("shitsureshimasu")
 

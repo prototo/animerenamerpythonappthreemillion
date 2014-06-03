@@ -13,8 +13,16 @@
     {% for episode in episodes %}
       <li>
         <h4>{{ episode.epno }}: {{ episode.get_title() }}</h4>
-        {% if episode,files|length > 0 %}
-          <p>Onwed: {{ episode.files[0].path }}</p>
+        {% if episode.files|length > 0 %}
+          <p>
+            Owned: {{ episode.files[0].path }}
+          </p>
+        {% else %}
+          <p>
+            <a>
+              Need: Download link somehow
+            </a>
+          </p>
         {% endif %}
       </li>
     {% endfor %}
