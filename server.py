@@ -1,8 +1,9 @@
-from flask import Flask, render_template, send_file
+from flask import Flask, render_template, send_file, request
 import os.path
 
 from config import image_store
 from animeinfo import Anime
+from search import search
 
 import index
 
@@ -14,6 +15,12 @@ def images(filename):
   path = image_store.strip() + name.strip()
   return send_file(path)
 
+@app.route('/search')
+def find_anime():
+    term = request.args.get('term')
+    results = search(term)
+    return render_template('search.html', results=results)
+
 @app.route('/anime/<aid>')
 def anime(aid):
   anime = Anime(aid)
@@ -21,9 +28,8 @@ def anime(aid):
     return "That AID isn't right"
   indexed_anime = index.get_anime(aid)
   episodes = indexed_anime.episodes if indexed_anime is not None else []
-  return render_template("anime.html", anime=anime, episodes=episodes)
+  return render_template("anime.html", anime=indexed_anime, episodes=episodes)
 
-#@app.route('/index/anime')
 @app.route('/')
 def indexed_anime():
   print("HI")

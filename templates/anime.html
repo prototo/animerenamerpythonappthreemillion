@@ -3,11 +3,11 @@
 {% block body %}
 <div id="anime">
   <h1 class="title">
-    {{ anime.getTitle()['en'] }} ({{ anime.getTitle()['x-jat'] }})
+    {{ anime['name'] }} ({{ anime['name_jp'] }})
   </h1>
-  <img class="cover" src="/images{{ anime.getPicture()  }}" />
+  <img class="cover" src="/images{{ anime['picture']  }}" />
   <p class="description">
-    {{ anime.getDescription() }}
+    {{ anime['description'] }}
   </p>
   <ul class="files">
     {% for episode in episodes %}
