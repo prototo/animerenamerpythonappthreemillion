@@ -18,4 +18,5 @@ username = 'user'
 password = 'pass'
 store = '/home/user/anime'
 data_store = '/home/user/arpatm/data/'
-image_store = '/home/user/arpatm/images/'
+image_store = '/home/user/arpatm/images
+torrent_watch_dir = '/home/user/arpatm/torrents'
