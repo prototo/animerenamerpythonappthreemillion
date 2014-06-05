@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_file, request
+from flask import Flask, render_template, send_file, request, redirect, flash
 import os.path
 
 from config import image_store
@@ -6,8 +6,10 @@ from animeinfo import Anime
 from search import search
 
 import index
+from nyaa import Nyaa
 
 app = Flask(__name__)
+app.secret_key = 'nice boat'
 
 @app.route('/images/<path:filename>')
 def images(filename):
@@ -20,6 +22,23 @@ def find_anime():
     term = request.args.get('term')
     results = search(term)
     return render_template('search.html', results=results)
+
+@app.route('/download/<eid>')
+def download_episode(eid):
+    episode = index.get_episode(eid)
+    name = str(episode.anime)
+    epno = episode.epno
+
+    nyaa = Nyaa()
+    torrent = nyaa.find_torrent(name, epno=epno)
+    if torrent:
+        title, link = torrent
+        nyaa.download_torrent(link, title)
+        flash('Downloaded torrent for {0}'.format(title))
+    else:
+        flash('Failed to find torrent for {0} episode {1}'.format(name, epno))
+
+    return redirect('/anime/' + str(episode.anime.id))
 
 @app.route('/anime/<aid>')
 def anime(aid):

@@ -117,6 +117,11 @@ def add_episode(**kwargs):
   add(Episode, data)
   # print("episode", kwargs['title'] or kwargsp['title_ro'] or kwargs['title_jp'])
 
+def get_episode(eid):
+    with session_scope() as session:
+        q = session.query(Episode).options(joinedload('*')).filter(Episode.id == eid).first()
+        return q
+
 # add an anime into the anime table
 def add_anime(**kwargs):
   keys = ['id', 'name', 'name_ro', 'name_jp', 'episode_count', 'description', 'picture', 'start_date', 'end_date']
