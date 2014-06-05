@@ -115,7 +115,7 @@ def add_episode(**kwargs):
   if (exists(Episode, Episode.id, kwargs['id'])):
     return False
   add(Episode, data)
-  print("episode", kwargs['title'] or kwargsp['title_ro'] or kwargs['title_jp'])
+  # print("episode", kwargs['title'] or kwargsp['title_ro'] or kwargs['title_jp'])
 
 # add an anime into the anime table
 def add_anime(**kwargs):
@@ -124,7 +124,7 @@ def add_anime(**kwargs):
   if (exists(Anime, Anime.id, kwargs['id'])):
     return False
   add(Anime, data)
-  print("anime", kwargs['name'] or kwargs['name_ro'] or kwargs['name_jp'])
+  # print("anime", kwargs['name'] or kwargs['name_ro'] or kwargs['name_jp'])
 
 def get_anime(aid):
   with session_scope() as session:

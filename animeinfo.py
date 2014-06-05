@@ -22,6 +22,7 @@ class Anime:
 	def __init__(self, aid):
 		self.aid = aid
 		self.xml = AnimeFetcher(aid).getXML()
+
 		# no XML? AnimeFetcher failed but couldn't do anything about it due to poor design
 		# raise noSuchAnimeError somewhere?
 		if self.xml is None:
@@ -72,6 +73,7 @@ class Anime:
 		# gonna have to be the internets
 		base = 'http://img7.anidb.net/pics/anime/'
 		location = self.root.find('picture')
+
 		if location is None:
 			return None
 		else:
@@ -168,9 +170,9 @@ class Anime:
 
 		index.add_anime(
 			id=self.aid, name=name, name_ro=name_ro, name_jp=name_jp,
-			episode_coune=self.getEpisodecount(),
+			episode_count=self.getEpisodecount(),
 			description=self.getDescription(),
-			picture=self.getPicture(),
+			picture='', # self.getPicture(),
 			start_date=start_date,
 			end_date=end_date
 		)
