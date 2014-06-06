@@ -3,7 +3,8 @@
 {% block body %}
 <div id="anime">
   <h1 class="title">
-    {{ anime['name'] }} ({{ anime['name_jp'] }})
+    {{ anime.name }} ({{ anime['name_jp'] }})
+    <a href="/download/anime/{{ anime['id'] }}">Subscribe</a>
   </h1>
   <img class="cover" src="/images{{ anime['picture']  }}" />
   <p class="description">
@@ -19,7 +20,7 @@
           </p>
         {% else %}
           <p>
-            <a href="/download/{{ episode.id }}">Download this episode</a>
+            <a href="/download/episode/{{ episode.id }}">Download this episode</a>
           </p>
         {% endif %}
       </li>
