@@ -103,10 +103,7 @@ class Nyaa:
         filepath = os.path.join(watch_dir, filename)
         print ("downloading",link,"to",filepath)
 
-        with urllib.request.urlopen(link) as response:
-            with open(filepath, "w") as f:
-                data = response.read()
-                f.write(data.decode('latin-1'))
+        urllib.request.urlretrieve(link, filepath)
 
     # expects the return format of self.find_torrents
     def download_torrents(self, torrents):
