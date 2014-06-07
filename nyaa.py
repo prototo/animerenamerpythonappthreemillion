@@ -5,6 +5,7 @@ from uuid import uuid4
 from config import torrent_watch_dir as watch_dir
 import os
 import re
+import index
 
 base_uri = 'http://www.nyaa.se/?page=rss&term='
 
@@ -89,21 +90,31 @@ class Nyaa:
     # TODO: decide if list of ints is actually a good way to do this
     def find_episodes(self, episodes):
         # call find torrent on all the episode numbers given
-        torrents = map(self.find_episode, episodes)
-        torrents = [ t for t in torrents if t[0] ]
+        torrents = []
+        for episode in episodes:
+            torrent = self.find_episode(episode.epno)
+            if torrent[0]:
+                torrent = (torrent[0], torrent[1], episode.id)
+                torrents.append(torrent)
 
         # could be empty, let client worry about that
         return torrents
 
     # generate a unique id for the torrent filename if one hasn't been given
-    def download_torrent(self, link, filename=str(uuid4())):
+    def download_torrent(self, link, filename=str(uuid4()), eid=None):
+        print(filename, eid)
         if ' ' in filename:
             filename = filename.replace(' ', '_')
         filename = filename + ".torrent"
         filepath = os.path.join(watch_dir, filename)
         print ("downloading",link,"to",filepath)
 
+        # download the torrent
         urllib.request.urlretrieve(link, filepath)
+
+        # add this episode to the downloads table
+        if eid:
+            index.add_download(eid=eid)
 
     # expects the return format of self.find_torrents
     def download_torrents(self, torrents):

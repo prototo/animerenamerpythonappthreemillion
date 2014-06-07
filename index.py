@@ -11,6 +11,9 @@ engine = create_engine('sqlite:///' + dbpath)
 
 Base = declarative_base()
 
+"""
+    Files table
+"""
 class File(Base):
   __tablename__ = 'files'
 
@@ -22,6 +25,9 @@ class File(Base):
   def __repr__(self):
     return self.path
 
+"""
+    Episodes table
+"""
 class Episode(Base):
   __tablename__ = 'episodes'
 
@@ -41,6 +47,9 @@ class Episode(Base):
   def get_title(self):
     return self.title or self.title_ro or self.title_jp
 
+"""
+    Anime table
+"""
 class Anime(Base):
   __tablename__ = 'anime'
 
@@ -63,8 +72,19 @@ class Anime(Base):
   def get_name(self):
     return self.name or self.name_ro or self.name_jp
 
-Base.metadata.create_all(engine)
+"""
+    Downloads table
+"""
+class Download(Base):
+    __tablename__ = 'downloads'
 
+    id = Column(Integer, primary_key=True)
+    eid = Column(Integer, ForeignKey('episodes.id'))
+
+    episode = relationship("Episode", backref="download")
+
+# create all the tables that haven't been created
+Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine, expire_on_commit=False)
 
 @contextmanager
@@ -99,6 +119,13 @@ def add(model, data):
     item = model(**data)
     session.add(item)
 
+# delete a row from the given table
+def delete(model, attribute, value):
+  with session_scope() as session:
+    q = session.query(model).filter(attribute == value).first()
+    if q:
+      session.delete(q)
+
 # add a file into the files tables
 def add_file(**kwargs):
   keys = ['path', 'ed2k', 'eid', 'aid']
@@ -106,6 +133,10 @@ def add_file(**kwargs):
   if (file_path_exists(data['path'])):
     return False
   add(File, data)
+
+  # remove any rows for this episode from the downloads table
+  delete(Download, Download.eid, data['eid'])
+
   print("file", data['path'])
 
 # add an episode into the episodes table
@@ -141,3 +172,9 @@ def get_all_anime():
     q = session.query(Anime).options(joinedload('*')).all()
     return q
 
+# add a download to the downloads table
+def add_download(**kwargs):
+    keys = ['eid']
+    data = extract_keys(kwargs, keys)
+    # don't really care if one already exists
+    add(Download, data)

@@ -14,15 +14,15 @@
     {% for episode in episodes %}
       <li>
         <h4>{{ episode.epno }}: {{ episode.get_title() }}</h4>
-        {% if episode.files|length > 0 %}
-          <p>
+        <p>
+          {% if episode.files|length > 0 %}
             Owned: {{ episode.files[0].path }}
-          </p>
-        {% else %}
-          <p>
+          {% elif episode.download %}
+            Downloading
+          {% else %}
             <a href="/download/episode/{{ episode.id }}">Download this episode</a>
-          </p>
-        {% endif %}
+          {% endif %}
+        </p>
       </li>
     {% endfor %}
   </ul>

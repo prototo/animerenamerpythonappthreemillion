@@ -26,36 +26,33 @@ def find_anime():
 @app.route('/download/episode/<eid>')
 def download_episode(eid):
     episode = index.get_episode(eid)
-    epno = episode.epno
 
     nyaa = Nyaa([
         anime.name, anime.name_ro, anime.name_jp
     ])
-    torrent = None
-
-    torrent = nyaa.find_torrent(epno)
+    torrent = nyaa.find_torrent(episode)
 
     if torrent:
         title, link = torrent
         nyaa.download_torrent(link, title)
         flash('Downloaded torrent {0}'.format(title))
     else:
-        flash('Failed to find torrent for {0} episode {1}'.format(name, epno))
+        flash('Failed to find torrent for {0} episode {1}'.format(name, episode.epno))
 
     return redirect('/anime/' + str(episode.anime.id))
 
 @app.route('/download/anime/<aid>')
 def download_anime(aid):
     anime = index.get_anime(aid)
-    episodes = [ episode.epno for episode in anime.episodes ]
+    episodes = anime.episodes
     nyaa = Nyaa([
         anime.name, anime.name_ro, anime.name_jp
     ])
     torrents = nyaa.find_episodes(episodes)
     nyaa.download_torrents(torrents)
 
-    for link, title in torrents:
-        flash('Downloaded torrent {0}'.format(title))
+    for torrent in torrents:
+        flash('Downloaded torrent {0}'.format(torrent[1]))
 
     return redirect('/anime/' + aid)
 
