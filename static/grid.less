@@ -1,0 +1,26 @@
+// @width needs to be defined before this is imported
+
+@columns: 8;
+@gutter: 12px;
+@column: (@width - (@gutter * (@columns - 1))) / @columns;
+
+.column(@amount) {
+    display: inline-block;
+    width: (@column * @amount) + (@gutter * (@amount - 1));
+    margin-left: @gutter;
+    box-sizing: border-box;
+    float: left;
+}
+
+.generate-grid(@n, @i: 1) when (@i =< @n) {
+  .c@{i} {
+    .column(@i);
+  }
+  .generate-grid(@n, (@i + 1));
+}
+.generate-grid(@columns);
+
+.first {
+    clear: both;
+    margin-left: 0;
+}

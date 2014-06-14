@@ -72,6 +72,10 @@ class Anime(Base):
   def get_name(self):
     return self.name or self.name_ro or self.name_jp
 
+  def get_names(self):
+      names = [self.name, self.name_ro, self.name_jp]
+      return [ name for name in names if name ]
+
 """
     Downloads table
 """

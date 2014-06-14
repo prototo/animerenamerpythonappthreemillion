@@ -1,0 +1,57 @@
+@import 'reset.less';
+
+@width: 1000px;
+@import 'grid.less';
+
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
+
+.text-outline(@width, @colour) {
+    text-shadow: @width @width @colour,
+        -@width @width @colour,
+        @width -@width @colour,
+        -@width -@width @colour;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+h1 {
+    font-size: 3em;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+h3 {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+p {
+    margin-bottom: 1em;
+}
+
+header, div#content, footer {
+    width: @width;
+    margin: auto;
+}
+
+header {
+
+}
+
+div#content {
+
+}
+
+@import 'anime.less';

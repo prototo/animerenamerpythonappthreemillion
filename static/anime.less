@@ -1,0 +1,36 @@
+div#anime {
+
+    header {
+        @header-height: 20em;
+
+        position: relative;
+        overflow: hidden;
+        height: @header-height;
+        margin-bottom: 1em;
+
+        h2 {
+            position: absolute;
+            bottom: 1em;
+            left: 1em;
+
+            color: white;
+            .text-outline(1px, rgba(0, 0, 0, 0.5));
+        }
+
+        img {
+            z-index: -1;
+            position: absolute;
+            width: 100%;
+            left: 0;
+            right: 0;
+            top: (@header-height / 2) * -1;
+        }
+    }
+
+    div#anime-sidebar {
+
+        img {
+            width: 100%;
+        }
+    }
+}

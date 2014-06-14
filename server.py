@@ -8,13 +8,16 @@ from search import search
 import index
 from nyaa import Nyaa
 
+from tvdb import TVDB
+tvdb = TVDB()
+
 app = Flask(__name__)
 app.secret_key = 'nice boat'
 
 @app.route('/images/<path:filename>')
 def images(filename):
   name = os.path.basename(filename)
-  path = image_store.strip() + name.strip()
+  path = os.path.join(image_store.strip(), name.strip())
   return send_file(path)
 
 @app.route('/search')
@@ -63,7 +66,16 @@ def anime(aid):
     return "That AID isn't right"
   indexed_anime = index.get_anime(aid)
   episodes = indexed_anime.episodes if indexed_anime is not None else []
-  return render_template("anime.html", anime=indexed_anime, episodes=episodes)
+
+  # get images from tvdb
+  splash = poster = None
+  for title in indexed_anime.get_names():
+      if not splash:
+        splash = tvdb.get_fanart(title)
+      if not poster:
+        poster = tvdb.get_poster(title)
+  print(splash, poster)
+  return render_template("anime.html", anime=indexed_anime, episodes=episodes, splash=splash, poster=poster)
 
 @app.route('/')
 def indexed_anime():

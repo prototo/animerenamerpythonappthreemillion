@@ -104,23 +104,22 @@ class TVDB:
 
     def get_series_banner(self, title, type):
         banners = self.get_series_banners(title, type)
-
-        if len(banners):
+        if banners and len(banners):
             # just take the first (FOR NOW)
             banner = banners[0]
             banner_path = banner_image_path.format(mirror = self.mirror, bannerpath = banner['bannerpath'])
             banner_ext = os.path.splitext(banner_path)[1]
-            banner_file = os.path.join(tvdb_image_store, banner['id'] + banner_ext)
+            banner_file_name = banner['id'] + banner_ext
+            # banner_file = os.path.join(tvdb_image_store, banner_file_name)
+            banner_file = os.path.join(image_store, banner_file_name)
             if not os.path.isfile(banner_file):
                 urlretrieve(banner_path, banner_file)
-            return banner_file
+            return banner_file_name
 
         return None
 
-if __name__ == '__main__':
-    from sys import argv
-    title = argv[1]
-    t = TVDB()
-    fanart = t.get_series_banner(title, 'fanart')
-    poster = t.get_series_banner(title, 'poster')
-    print(fanart, poster)
+    def get_fanart(self, title):
+        return self.get_series_banner(title, 'fanart')
+
+    def get_poster(self, title):
+        return self.get_series_banner(title, 'poster')

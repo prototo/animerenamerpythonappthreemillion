@@ -2,29 +2,34 @@
 
 {% block body %}
 <div id="anime">
-  <h1 class="title">
-    {{ anime.name }} ({{ anime['name_jp'] }})
-    <a href="/download/anime/{{ anime['id'] }}">Subscribe</a>
-  </h1>
-  <img class="cover" src="/images{{ anime['picture']  }}" />
-  <p class="description">
-    {{ anime['description'] }}
-  </p>
-  <ul class="files">
-    {% for episode in episodes %}
-      <li>
-        <h4>{{ episode.epno }}: {{ episode.get_title() }}</h4>
+    <header class="c8 first">
+        <img src="/images/{{ splash }}" />
+        <h2>{{ anime.name or anime.name_ro }} ({{ anime['name_jp'] }})</h2>
+        <!--<a href="/download/anime/{{ anime['id'] }}">Subscribe</a>-->
+    </header>
+    <div class="c2 first" id="anime-sidebar">
+        <img class="" src="/images/{{ poster }}" />
+    </div>
+    <div class="c6" id="anime-info">
         <p>
-          {% if episode.files|length > 0 %}
-            Owned: {{ episode.files[0].path }}
-          {% elif episode.download %}
-            Downloading
-          {% else %}
-            <a href="/download/episode/{{ episode.id }}">Download this episode</a>
-          {% endif %}
+            {{ anime['description'] }}
         </p>
-      </li>
-    {% endfor %}
-  </ul>
+        <ul>
+            {% for episode in episodes %}
+                <li>
+                    <h4>{{ episode.epno }}: {{ episode.get_title() }}</h4>
+                    <p>
+                        {% if episode.files|length > 0 %}
+                            Owned: {{ episode.files[0].path }}
+                        {% elif episode.download %}
+                            Downloading
+                        {% else %}
+                            <a href="/download/episode/{{ episode.id }}">Download this episode</a>
+                        {% endif %}
+                    </p>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
 {% endblock %}
