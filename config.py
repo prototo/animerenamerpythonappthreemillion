@@ -14,6 +14,9 @@ HTTP_CLIENT_NAME = 'harpatm'
 HTTP_CLIENT_VERSION = 0
 HTTP_PROTOVER = 1 
 
+# TVDB config
+TVDB_KEY = '2EAC4B8F6B6CF146'
+
 username = 'user'
 password = 'pass'
 store = '/home/user/anime'
