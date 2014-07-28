@@ -40,6 +40,7 @@ class Request:
 
     # if we got anything other than a 2XX response return None
     if not self.wasSuccessful(res):
+      print('unsuccessful response:', res)
       return None
 
     # if we have a regex get the dictionary of useful values

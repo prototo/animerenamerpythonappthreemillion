@@ -1,0 +1,22 @@
+<li {% if episode.files|length > 0 %} class="owned" {% endif %}>
+    <div class="episode-number">
+        <h2>{{ episode.epno }}</h2>
+    </div>
+    <div class="episode-title">
+        {% if episode.title %}
+            <h3>{{ episode.title }}</h3>
+            <span>{{ episode.title_ro }}</span>
+        {% else %}
+            <h3>{{ episode.title_ro }}</h3>
+        {% endif %}
+    </div>
+    <div class="episode-state">
+        {% if episode.files|length > 0 %}
+            <span class="icon owned" title="{{ episode.files[0].path }}"></span>
+        {% elif episode.download %}
+            <span class="icon downloading"></span>
+        {% else %}
+            <a href="/download/episode/{{ episode.id }}" class="icon download"></a>
+        {% endif %}
+    </div>
+</li>

@@ -125,7 +125,7 @@ logout = LogoutRequest()
 
 # do some shit
 res = auth.doRequest()
-if int(res['status']) in (200, 201):
+if res and int(res['status']) in (200, 201):
   print("Logged in with session " + res['session'])
 
   try:

@@ -1,4 +1,6 @@
 @import 'reset.less';
+@import 'elements.less';
+@import 'colours.less';
 
 @width: 1000px;
 @import 'grid.less';
@@ -20,11 +22,15 @@ body, html {
 
     font-size: 16px;
     font-family: 'Open Sans', sans-serif;
+    line-height: 1.5em;
+
+    background: @main-background;
+    color: @black;
 }
 
 h1 {
     font-size: 3em;
-    font-weight: bold;
+    font-weight: 300;
 }
 
 h2 {
@@ -33,7 +39,6 @@ h2 {
 }
 
 h3 {
-    font-size: 1.5em;
     font-weight: bold;
 }
 
@@ -41,17 +46,15 @@ p {
     margin-bottom: 1em;
 }
 
-header, div#content, footer {
+div#content, footer#footer {
     width: @width;
     margin: auto;
 }
 
-header {
-
+.clearfix {
+    clear: both;
 }
 
-div#content {
-
-}
-
+@import 'header.less';
+@import 'footer.less';
 @import 'anime.less';

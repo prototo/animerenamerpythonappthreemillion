@@ -47,6 +47,10 @@ class Episode(Base):
   def get_title(self):
     return self.title or self.title_ro or self.title_jp
 
+  def get_titles(self):
+    titles = [self.title, self.title_ro, self.title_jp]
+    return [ title for title in titles if title ]
+
 """
     Anime table
 """

@@ -16,9 +16,12 @@ app.secret_key = 'nice boat'
 
 @app.route('/images/<path:filename>')
 def images(filename):
-  name = os.path.basename(filename)
-  path = os.path.join(image_store.strip(), name.strip())
-  return send_file(path)
+    try:
+        name = os.path.basename(filename)
+        path = os.path.join(image_store.strip(), name.strip())
+        return send_file(path)
+    except:
+        return ''
 
 @app.route('/search')
 def find_anime():
@@ -61,28 +64,27 @@ def download_anime(aid):
 
 @app.route('/anime/<aid>')
 def anime(aid):
-  anime = Anime(aid)
-  if anime.xml == None:
-    return "That AID isn't right"
-  indexed_anime = index.get_anime(aid)
-  episodes = indexed_anime.episodes if indexed_anime is not None else []
+    anime = Anime(aid)
+    if anime.xml == None:
+        return "That AID isn't right"
+    indexed_anime = index.get_anime(aid)
+    episodes = indexed_anime.episodes if indexed_anime is not None else []
 
-  # get images from tvdb
-  splash = poster = None
-  for title in indexed_anime.get_names():
-      if not splash:
-        splash = tvdb.get_fanart(title)
-      if not poster:
-        poster = tvdb.get_poster(title)
-  print(splash, poster)
-  return render_template("anime.html", anime=indexed_anime, episodes=episodes, splash=splash, poster=poster)
+    # get images from tvdb
+    splash = poster = None
+    for title in indexed_anime.get_names():
+        if not splash:
+            splash = tvdb.get_fanart(title)
+        if not poster:
+            poster = tvdb.get_poster(title)
+
+    return render_template("anime.html", anime=indexed_anime, episodes=episodes, splash=splash, poster=poster)
 
 @app.route('/')
 def indexed_anime():
-  print("HI")
-  anime = index.get_all_anime()
-  return render_template("index/anime.html", anime=anime)
+    anime = index.get_all_anime()
+    return render_template("index/anime.html", anime=anime)
 
 if __name__ == "__main__":
-  app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
 

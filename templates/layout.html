@@ -14,17 +14,21 @@
         </ul>
     </div>
 
-    <header>
-      {% include "header.html" ignore missing %}
+    <div id="background"></div>
+
+    <header id="header">
+        <div>
+            {% include "header.html" ignore missing %}
+        </div>
     </header>
 
     <div id="content">
       {% block body %}{% endblock %}
+      <div class="clearfix"></div>
     </div>
 
-    <footer>
+    <footer id="footer">
       {% include "footer.html" ignore missing %}
     </footer>
-
   </body>
 </html>

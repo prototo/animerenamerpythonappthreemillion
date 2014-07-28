@@ -187,7 +187,7 @@ class AnimeFetcher:
 
 	def __init__(self, aid):
 		self.aid = aid
-		self.path = data_store + str(aid) + ".xml"
+		self.path = os.path.join(data_store, str(aid) + ".xml")
 		self.loadXML()
 
 	# return utf-8 string representation

@@ -24,8 +24,10 @@ class AuthRequest(Request):
 
   def doRequest(self):
     data = Request.doRequest(self)
-    connection.session = data["session"]
-    return data
+    if data:
+      connection.session = data["session"]
+      return data
+    return None
 
 # logout of the current session
 class LogoutRequest(Request):

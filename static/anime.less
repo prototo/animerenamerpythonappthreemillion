@@ -18,19 +18,86 @@ div#anime {
         }
 
         img {
-            z-index: -1;
             position: absolute;
             width: 100%;
             left: 0;
             right: 0;
-            top: (@header-height / 2) * -1;
         }
     }
 
     div#anime-sidebar {
-
         img {
             width: 100%;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    div#anime-list {
+
+        ul#episodes {
+            p {
+                margin: 0;
+            }
+
+            li {
+                position: relative;
+                padding: 1em 0;
+                border-radius: 3px;
+                
+                &:nth-child(odd) {
+                    background: @lightbluegrey;
+                }
+                
+                div {
+                    display: inline-block;
+                    vertical-align: middle;
+                }
+
+                div.episode-number {
+                    width: 15%;
+                    text-align: center;
+                }
+
+                div.episode-title {
+                    width: 70%;
+                }
+                
+                div.episode-state {
+                    position: absolute;
+                    right: 0.5em;
+                    top: 0;
+                    bottom: 0;
+                    height: 100%;
+                    
+                    .icon {
+                        @icon-size: 2em;
+                        background-image: url(icons/ic_action_about.png);
+                        background-repeat: no-repeat;
+                        background-position: center center;
+                        background-size: @icon-size @icon-size;
+                        display: inline-block;
+                        width: @icon-size;
+                        height: @icon-size;
+                        height: 100%;
+                        
+                        &.owned {
+                            background-image: url(icons/ic_action_collection.png);
+                        }
+                        
+                        &.downloading {
+                            background-image: url(icons/ic_action_data_esage.png);
+                        }
+                        
+                        &.download {
+                            background-image: url(icons/ic_action_download.png);
+                        }
+                    }
+                }
+            }
+
+            li.ownder {
+                background: @green;
+            }
         }
     }
 }
