@@ -1,14 +1,12 @@
 from flask import Flask, render_template, send_file, request, redirect, flash
 import os.path
-
 from config import image_store
-from animeinfo import Anime
-from search import search
+from lib.anidb.animeinfo import Anime
+from arpatm.search import search
+import lib.index as index
+from lib.tvdb import TVDB
+from lib.nyaa import Nyaa
 
-import index
-from nyaa import Nyaa
-
-from tvdb import TVDB
 tvdb = TVDB()
 
 app = Flask(__name__)
@@ -19,6 +17,7 @@ def images(filename):
     try:
         name = os.path.basename(filename)
         path = os.path.join(image_store.strip(), name.strip())
+        path = os.path.abspath(path)
         return send_file(path)
     except:
         return ''
@@ -85,6 +84,8 @@ def indexed_anime():
     anime = index.get_all_anime()
     return render_template("index/anime.html", anime=anime)
 
-if __name__ == "__main__":
+def run():
     app.run(debug=True, host='0.0.0.0')
 
+if __name__ == "__main__":
+    run()
