@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, ForeignKey, Integer, String, Date
+from sqlalchemy import create_engine, Column, ForeignKey, Integer, String, Date, desc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, joinedload
 
@@ -78,35 +78,6 @@ class Episode(Base, Helper):
     return [ title for title in titles if title ]
 
 """
-    Anime table
-"""
-class Anime(Base, Helper):
-  __tablename__ = 'anime'
-
-  id = Column(Integer, primary_key=True, unique=True)
-  name = Column(String)
-  name_ro = Column(String)
-  name_jp = Column(String)
-  episode_count = Column(Integer)
-  description = Column(String)
-  picture = Column(String)
-  start_date = Column(Date)
-  end_date = Column(Date)
-
-  files = relationship("File", order_by=File.path, backref="anime")
-  episodes = relationship("Episode", order_by=Episode.epno, backref="anime")
-
-  def __repr__(self):
-    return self.get_name()
-
-  def get_name(self):
-    return self.name or self.name_ro or self.name_jp
-
-  def get_names(self):
-      names = [self.name, self.name_ro, self.name_jp]
-      return [ name for name in names if name ]
-
-"""
     Downloads table
 """
 class Download(Base, Helper):
@@ -123,8 +94,8 @@ class Download(Base, Helper):
 class Group(Base, Helper):
     __tablename__ = 'groups'
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False, unique=True)
+    id = Column(Integer, primary_key=True, unique=True)
+    name = Column(String, nullable=False)
 
 """
     Group Status table
@@ -135,7 +106,43 @@ class GroupStatus(Base, Helper):
     id = Column(Integer, primary_key=True)
     aid = Column(Integer, ForeignKey('anime.id'), nullable=False)
     gid = Column(Integer, ForeignKey('groups.id'), nullable=False)
-    episodes = Column(Integer)
+    completed_state = Column(String)
+    episode_range = Column(String)
+    last_episode = Column(Integer)
+    rating = Column(Integer)
+    votes = Column(Integer)
+
+    group = relationship("Group")
+
+"""
+    Anime table
+"""
+class Anime(Base, Helper):
+    __tablename__ = 'anime'
+
+    id = Column(Integer, primary_key=True, unique=True)
+    name = Column(String)
+    name_ro = Column(String)
+    name_jp = Column(String)
+    episode_count = Column(Integer)
+    description = Column(String)
+    picture = Column(String)
+    start_date = Column(Date)
+    end_date = Column(Date)
+
+    files = relationship("File", order_by=File.path, backref="anime")
+    episodes = relationship("Episode", order_by=Episode.epno, backref="anime")
+    groups = relationship("GroupStatus", order_by=(desc(GroupStatus.last_episode), desc(GroupStatus.rating)), backref="anime")
+
+    def __repr__(self):
+        return self.get_name()
+
+    def get_name(self):
+        return self.name or self.name_ro or self.name_jp
+
+    def get_names(self):
+        names = [self.name, self.name_ro, self.name_jp]
+        return [name for name in names if name]
 
 # create all the tables that haven't been created
 Base.metadata.create_all(engine)

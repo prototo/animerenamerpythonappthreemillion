@@ -70,6 +70,7 @@ def anime(aid):
         return "That AID isn't right"
     indexed_anime = index.get_anime(aid)
     episodes = indexed_anime.episodes if indexed_anime is not None else []
+    groups = indexed_anime.groups if indexed_anime is not None else []
 
     # get images from tvdb
     splash = poster = None
@@ -79,7 +80,7 @@ def anime(aid):
         if not poster:
             poster = tvdb.get_poster(title)
 
-    return render_template("anime.html", anime=indexed_anime, episodes=episodes, splash=splash, poster=poster)
+    return render_template("anime.html", anime=indexed_anime, episodes=episodes, groups=groups, splash=splash, poster=poster)
 
 @app.route('/')
 def indexed_anime():

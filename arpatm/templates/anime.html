@@ -5,7 +5,6 @@
     <header class="c8 first">
         <img src="/images/{{ splash }}" />
         <h2>{{ anime.name_ro }} {% if anime['name'] %}({{ anime['name'] }}){% endif %}</h2>
-        <!--<a href="/download/anime/{{ anime['id'] }}">Subscribe</a>-->
     </header>
     <!--
     <div class="c2 first" id="anime-sidebar">
@@ -13,9 +12,18 @@
     </div>
     -->
     <div class="c4 first" id="anime-info">
+        <a href="/download/anime/{{ anime['id'] }}">Subscribe</a>
         <p>
             {{ anime['description'] }}
         </p>
+        <h3>Groups</h3>
+        <ul>
+            {% for group in groups %}
+                <li>
+                    <p>{{ group.group.name }} ({{ group.completed_state }})<br/>{{ group.rating }} ({{ group.votes }})</p>
+                </li>
+            {% endfor %}
+        </ul>
     </div>
     <div class="c4" id="anime-list">
         <ul id="episodes">
