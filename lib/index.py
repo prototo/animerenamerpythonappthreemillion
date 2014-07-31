@@ -8,13 +8,39 @@ dbpath = ':memory:'
 dbpath = 'anime.db'
 
 engine = create_engine('sqlite:///' + dbpath)
+Session = sessionmaker(bind=engine, expire_on_commit=False)
+
+@contextmanager
+def session_scope():
+  session = Session()
+  try:
+    yield session
+    session.commit()
+  except:
+    session.rollback()
+    raise
+  finally:
+    session.close()
+
 
 Base = declarative_base()
+
+class Helper(object):
+    @classmethod
+    def add(cls, data):
+        with session_scope() as session:
+            session.add(cls(**data))
+
+    @classmethod
+    def exists(cls, filter):
+        with session_scope() as session:
+            q = session.query(cls).filter_by(**filter)
+            return session.query(q.exists()).scalar()
 
 """
     Files table
 """
-class File(Base):
+class File(Base, Helper):
   __tablename__ = 'files'
 
   ed2k = Column(String, primary_key=True, unique=True)
@@ -28,7 +54,7 @@ class File(Base):
 """
     Episodes table
 """
-class Episode(Base):
+class Episode(Base, Helper):
   __tablename__ = 'episodes'
 
   id = Column(Integer, primary_key=True, unique=True)
@@ -54,7 +80,7 @@ class Episode(Base):
 """
     Anime table
 """
-class Anime(Base):
+class Anime(Base, Helper):
   __tablename__ = 'anime'
 
   id = Column(Integer, primary_key=True, unique=True)
@@ -83,7 +109,7 @@ class Anime(Base):
 """
     Downloads table
 """
-class Download(Base):
+class Download(Base, Helper):
     __tablename__ = 'downloads'
 
     id = Column(Integer, primary_key=True)
@@ -91,21 +117,28 @@ class Download(Base):
 
     episode = relationship("Episode", backref="download")
 
+"""
+    Groups table
+"""
+class Group(Base, Helper):
+    __tablename__ = 'groups'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False, unique=True)
+
+"""
+    Group Status table
+"""
+class GroupStatus(Base, Helper):
+    __tablename__ = 'groupstatus'
+
+    id = Column(Integer, primary_key=True)
+    aid = Column(Integer, ForeignKey('anime.id'), nullable=False)
+    gid = Column(Integer, ForeignKey('groups.id'), nullable=False)
+    episodes = Column(Integer)
+
 # create all the tables that haven't been created
 Base.metadata.create_all(engine)
-Session = sessionmaker(bind=engine, expire_on_commit=False)
-
-@contextmanager
-def session_scope():
-  session = Session()
-  try:
-    yield session
-    session.commit()
-  except:
-    session.rollback()
-    raise
-  finally:
-    session.close()
 
 # check a row exists in the database for
 def exists(model, attribute, value):

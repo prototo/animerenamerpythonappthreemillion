@@ -80,3 +80,28 @@ class FileRequest(Request):
     # set the size and hash of the file in the request parameters
     self.params["size"] = os.path.getsize(filename)
     self.params["ed2k"] = ed2k.hash(filename)
+
+
+#get group data for aid
+class GroupsRequest(Request):
+  location = "GROUPSTATUS"
+  zip_params = [
+      "gid", "name", "completed_state", "last_episode", "rating", "votes", "episode_range"
+  ]
+  completed_states = {
+      1: 'ongoing', 2: 'stalled', 3: 'complete',
+      4: 'dropped', 5: 'finished', 6: 'specials only'
+  }
+
+  def __init__(self, aid):
+    self.params['aid'] = aid
+
+  def doRequest(self):
+    data = Request.doRequest(self)
+    self.setCompletedStates(data)
+    return data
+
+  def setCompletedStates(self, data):
+    for group in data:
+      state = int(group["completed_state"])
+      group["completed_state"] = self.completed_states[state] or state

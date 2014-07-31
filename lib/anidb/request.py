@@ -23,31 +23,51 @@ class Request:
     # print("Sending request to: " + location)
     return location
 
-  # send the request and return the data we get back
-  # this method is blocking
-  def doRequest(self):
+  def getResponse(self):
     location = self.getLocation()
+    print(location)
+
     while (time() - connection.last_request) < 2:
       sleep(1)
+
     connection.sock.sendto(bytes(location.encode()), (API_ADDR, API_PORT))
     data = connection.sock.recv(1400)
-    res = data.decode().strip().replace("\n", " ")
-    # print("Got: " + res)
+    data = data.decode().strip()
+    print("Got: " + data)
 
     # update the last_request time
     connection.last_request = time()
 
+    return data
+
+  # send the request and return the data we get back
+  # this method is blocking
+  def doRequest(self):
+    res = self.getResponse()
+    status = data = None
+
+    if "\n" in res:
+      (status, data) = res.split("\n", 1)
+    else:
+      status = data = res
+
+    print(status)
+    print(data)
+
     # if we got anything other than a 2XX response return None
-    if not self.wasSuccessful(res):
-      print('unsuccessful response:', res)
+    if not self.wasSuccessful(status):
+      print('unsuccessful response:', status)
       return None
 
     # if we have a regex get the dictionary of useful values
     if self.response_regex:
-      return self.matchResponse(res)
+      return self.matchResponse(data)
     elif self.zip_params:
-      return self.zipResponse(res)
-    return res
+      if "\n" in res:   # multi line return
+        return self.zipMultipleLines(data)
+      else:
+        return self.zipResponse(data)
+    return data
 
   # gets a dictionary of named groups
   def matchResponse(self, res):
@@ -56,10 +76,11 @@ class Request:
       return None
     return group.groupdict()
 
+  def zipMultipleLines(self, res):
+    return [self.zipResponse(line) for line in res.split("\n")]
+
   # zip the response data with the parameter names
   def zipResponse(self, res):
-    # [2] should be the response data we want
-    res = res.split(" ", 2)[2]
     res = res.split("|")
     # this replaces all the empty strings in res with None
     res = [val or None for val in res]
@@ -71,4 +92,3 @@ class Request:
     status = res.split(" ")[0]
     status = int(status)
     return status > 199 and status < 300
-      
