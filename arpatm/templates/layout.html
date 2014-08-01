@@ -22,10 +22,7 @@
         </div>
     </header>
 
-    <div id="content">
-      {% block body %}{% endblock %}
-      <div class="clearfix"></div>
-    </div>
+    {% block body %}{% endblock %}
 
     <footer id="footer">
       {% include "footer.html" ignore missing %}

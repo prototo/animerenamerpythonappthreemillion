@@ -1,21 +1,21 @@
 body {
     @header-height: 4em;
-    padding-top: @header-height;
 
     header#header {
         height: @header-height;
-        width: 100%;
         line-height: @header-height;
-        position: fixed;
         top: 0;
         background: @main-background;
+        position: relative;
         z-index: 100;
+        
+        a {
+            color: @white;
+            text-decoration: none;
+        }
 
         &>div {
-            box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.5);
-            width: @width;
-            margin: auto;
-            position: relative;
+        
         }
 
         h1 {
@@ -32,9 +32,16 @@ body {
 
                 border: 1px solid rgba(0, 0, 0, 0.3);
                 box-sizing: border-box;
-                width: 20em;
+                width: 12em;
                 padding: 0.5em;
                 margin: 0;
+                opacity: 0.8;
+                transition: all 0.5s;
+            
+                &:hover, &:focus {
+                    width: 25em;
+                    opacity: 1;
+                }
             }
         }
     }

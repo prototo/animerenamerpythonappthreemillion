@@ -133,58 +133,6 @@ table {
     A set of useful LESS mixins
     More info at: http://lesselements.com
   ---------------------------------------------------*/
-.c1 {
-  width: 114.5px;
-  margin-left: 12px;
-  box-sizing: border-box;
-  float: left;
-}
-.c2 {
-  width: 241px;
-  margin-left: 12px;
-  box-sizing: border-box;
-  float: left;
-}
-.c3 {
-  width: 367.5px;
-  margin-left: 12px;
-  box-sizing: border-box;
-  float: left;
-}
-.c4 {
-  width: 494px;
-  margin-left: 12px;
-  box-sizing: border-box;
-  float: left;
-}
-.c5 {
-  width: 620.5px;
-  margin-left: 12px;
-  box-sizing: border-box;
-  float: left;
-}
-.c6 {
-  width: 747px;
-  margin-left: 12px;
-  box-sizing: border-box;
-  float: left;
-}
-.c7 {
-  width: 873.5px;
-  margin-left: 12px;
-  box-sizing: border-box;
-  float: left;
-}
-.c8 {
-  width: 1000px;
-  margin-left: 12px;
-  box-sizing: border-box;
-  float: left;
-}
-.first {
-  clear: both;
-  margin-left: 0;
-}
 body,
 html {
   width: 100%;
@@ -194,8 +142,8 @@ html {
   font-size: 16px;
   font-family: 'Open Sans', sans-serif;
   line-height: 1.5em;
-  background: #f9f9f9;
-  color: #303030;
+  background: #212121;
+  color: #fafafa;
 }
 h1 {
   font-size: 3em;
@@ -211,31 +159,34 @@ h3 {
 p {
   margin-bottom: 1em;
 }
-div#content,
+header#header,
 footer#footer {
-  width: 1000px;
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+  margin-left: 4.8px;
+  margin-bottom: 9.6px;
+  padding: 4.8px;
+  width: 960px;
+  display: block;
   margin: auto;
+  padding: 0;
 }
 .clearfix {
   clear: both;
 }
-body {
-  padding-top: 4em;
-}
 body header#header {
   height: 4em;
-  width: 100%;
   line-height: 4em;
-  position: fixed;
   top: 0;
-  background: #f9f9f9;
+  background: #212121;
+  position: relative;
   z-index: 100;
 }
-body header#header > div {
-  box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.5);
-  width: 1000px;
-  margin: auto;
-  position: relative;
+body header#header a {
+  color: #fafafa;
+  text-decoration: none;
 }
 body header#header form {
   position: absolute;
@@ -248,35 +199,90 @@ body header#header form input {
   border-radius: 5px;
   border: 1px solid rgba(0, 0, 0, 0.3);
   box-sizing: border-box;
-  width: 20em;
+  width: 12em;
   padding: 0.5em;
   margin: 0;
+  opacity: 0.8;
+  transition: all 0.5s;
+}
+body header#header form input:hover,
+body header#header form input:focus {
+  width: 25em;
+  opacity: 1;
 }
 footer {
   min-height: 1em;
 }
-div#anime header {
+div#splash {
   position: relative;
   overflow: hidden;
-  height: 20em;
   margin-bottom: 1em;
-}
-div#anime header h2 {
-  position: absolute;
-  bottom: 1em;
-  left: 1em;
-  color: white;
-  text-shadow: 1px 1px rgba(0, 0, 0, 0.5), -1px 1px rgba(0, 0, 0, 0.5), 1px -1px rgba(0, 0, 0, 0.5), -1px -1px rgba(0, 0, 0, 0.5);
-}
-div#anime header img {
-  position: absolute;
   width: 100%;
-  left: 0;
-  right: 0;
+  max-height: 35em;
 }
-div#anime div#anime-sidebar img {
+div#splash img {
   width: 100%;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  height: auto;
+}
+div#splash div.shadow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -10em;
+  left: -10em;
+  -webkit-box-shadow: inset 0 0 2.5em #000000;
+  -moz-box-shadow: inset 0 0 2.5em #000000;
+  box-shadow: inset 0 0 2.5em #000000;
+}
+div#anime {
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+  margin-left: 4.8px;
+  margin-bottom: 9.6px;
+  padding: 4.8px;
+  width: 960px;
+  display: block;
+  margin: auto;
+  padding: 0;
+}
+div#anime h2#anime-name {
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+  margin-left: 4.8px;
+  margin-bottom: 9.6px;
+  padding: 4.8px;
+  width: 636.8px;
+  margin-left: 0;
+  font-weight: 200;
+}
+div#anime div#anime-actions {
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+  margin-left: 4.8px;
+  margin-bottom: 9.6px;
+  padding: 4.8px;
+  width: 313.6px;
+}
+div#anime div#anime-actions a#subscribe {
+  background: #00bcd4;
+  padding: 0.5em;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  color: #fafafa;
+  text-decoration: none;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  transition: all 0.5s;
+  float: right;
+}
+div#anime div#anime-actions a#subscribe:hover {
+  background: #008fa1;
 }
 div#anime div#anime-list ul#episodes p {
   margin: 0;
@@ -333,6 +339,6 @@ div#anime div#anime-list ul#episodes li div.episode-state .icon.download {
   background-image: url(icons/ic_action_download.png);
 }
 div#anime div#anime-list ul#episodes li.ownder {
-  background: #b7e866;
+  background: #259b24;
 }
 /*# sourceMappingURL=style.css.map */

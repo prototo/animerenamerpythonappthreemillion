@@ -1,0 +1,13 @@
+.button() {
+    background: @cyan;
+    padding: 0.5em;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    color: @white;
+    text-decoration: none;
+    .rounded(3px);
+    transition: all 0.5s;
+    
+    &:hover {
+        background: darken(@cyan, 10%);
+    }
+}

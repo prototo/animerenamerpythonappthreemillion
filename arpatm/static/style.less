@@ -1,8 +1,9 @@
 @import 'reset.less';
 @import 'elements.less';
 @import 'colours.less';
+@import 'button.less';
 
-@width: 1000px;
+@width: 960px;
 @import 'grid.less';
 
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
@@ -25,7 +26,7 @@ body, html {
     line-height: 1.5em;
 
     background: @main-background;
-    color: @black;
+    color: @white;
 }
 
 h1 {
@@ -46,9 +47,8 @@ p {
     margin-bottom: 1em;
 }
 
-div#content, footer#footer {
-    width: @width;
-    margin: auto;
+header#header, footer#footer {
+    .container();
 }
 
 .clearfix {

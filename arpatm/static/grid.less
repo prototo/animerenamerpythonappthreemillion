@@ -1,25 +1,29 @@
-// @width needs to be defined before this is imported
+@columns: 6;
+@gutter: @width * 0.01;
+@padding: @width * 0.005;
+@column-width: (@width - (@gutter * (@columns - 1))) / @columns;
 
-@columns: 8;
-@gutter: 12px;
-@column: (@width - (@gutter * (@columns - 1))) / @columns;
-
-.column(@amount) {
-    width: (@column * @amount) + (@gutter * (@amount - 1));
-    margin-left: @gutter;
+.span(@n: 1) {
     box-sizing: border-box;
-    float: left;
+    display: inline-block;
+    vertical-align: middle;
+    
+    margin: 0;
+    margin-left: @gutter / 2;   // this is a big hack because inline block don't sit well
+    margin-bottom: @gutter;
+    
+    padding: @padding;
+    
+    width: (@column-width * @n) + (@gutter * (@n - 1));
 }
 
-.generate-grid(@n, @i: 1) when (@i =< @n) {
-  .c@{i} {
-    .column(@i);
-  }
-  .generate-grid(@n, (@i + 1));
+.container() {
+    .span(6);
+    display: block;
+    margin: auto;
+    padding: 0;
 }
-.generate-grid(@columns);
 
-.first {
-    clear: both;
+.first() {
     margin-left: 0;
 }

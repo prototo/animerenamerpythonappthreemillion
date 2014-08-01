@@ -1,36 +1,35 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<div id="anime">
-    <header class="c8 first">
+    <div id="splash">
+        <div class="shadow"></div>
         <img src="/images/{{ splash }}" />
-        <h2>{{ anime.name_ro }} {% if anime['name'] %}({{ anime['name'] }}){% endif %}</h2>
-    </header>
-    <!--
-    <div class="c2 first" id="anime-sidebar">
-        <img class="" src="/images/{{ poster }}" />
     </div>
-    -->
-    <div class="c4 first" id="anime-info">
-        <a href="/download/anime/{{ anime['id'] }}">Subscribe</a>
-        <p>
-            {{ anime['description'] }}
-        </p>
-        <h3>Groups</h3>
-        <ul>
-            {% for group in groups %}
-                <li>
-                    <p>{{ group.group.name }} ({{ group.completed_state }})<br/>{{ group.rating }} ({{ group.votes }})</p>
-                </li>
-            {% endfor %}
-        </ul>
+    <div id="anime">
+        <h2 id="anime-name">{{ anime.name }} ({{ anime['name_jp'] }})</h2>
+        <div id="anime-actions">
+            <a id="subscribe" href="/download/anime/{{ anime['id'] }}">Subscribe</a>
+            <div class="clearfix"></div>
+        </div>
+        <div class="description">
+            <p>
+                {{ anime['description'] }}
+            </p>
+            <h3>Groups</h3>
+            <ul>
+                {% for group in groups %}
+                    <li>
+                        <p>{{ group.group.name }} ({{ group.completed_state }})<br/>{{ group.rating }} ({{ group.votes }})</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="list">
+            <ul id="episodes">
+                {% for episode in episodes %}
+                    {% include "episode_row.html" ignore missing %}
+                {% endfor %}
+            </ul>
+        </div>
     </div>
-    <div class="c4" id="anime-list">
-        <ul id="episodes">
-            {% for episode in episodes %}
-                {% include "episode_row.html" ignore missing %}
-            {% endfor %}
-        </ul>
-    </div>
-</div>
 {% endblock %}

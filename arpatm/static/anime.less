@@ -1,34 +1,40 @@
-div#anime {
+div#splash {
+    @splash-height: 35em;
 
-    header {
-        @header-height: 20em;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1em;
+    width: 100%;
+    max-height: @splash-height;
 
-        position: relative;
-        overflow: hidden;
-        height: @header-height;
-        margin-bottom: 1em;
-
-        h2 {
-            position: absolute;
-            bottom: 1em;
-            left: 1em;
-
-            color: white;
-            .text-outline(1px, rgba(0, 0, 0, 0.5));
-        }
-
-        img {
-            position: absolute;
-            width: 100%;
-            left: 0;
-            right: 0;
-        }
+    img {
+        width: 100%;
+        height: auto;
     }
+    
+    div.shadow {
+        position: absolute;
+        top: 0; bottom: 0;
+        right: -10em; left: -10em;
+        .inner-shadow(0, 0, 2.5em, 1);
+    }
+}
 
-    div#anime-sidebar {
-        img {
-            width: 100%;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+div#anime {
+    .container();
+    
+    h2#anime-name {
+        .span(4);
+        .first();
+        font-weight: 200;
+    }
+    
+    div#anime-actions {
+        .span(2);
+        
+        a#subscribe {
+            .button();
+            float: right;
         }
     }
 
