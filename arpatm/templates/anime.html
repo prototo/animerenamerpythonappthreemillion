@@ -20,14 +20,7 @@
 
         </div>
         <div class="anime-groups">
-            <h3>Groups</h3>
-            <ul>
-                {% for group in groups %}
-                    <li>
-                        <p>{{ group.group.name }} ({{ group.completed_state }})<br/>{{ group.rating }} ({{ group.votes }})</p>
-                    </li>
-                {% endfor %}
-            </ul>
+
         </div>
         <div class="anime-list">
             <ul id="episodes">

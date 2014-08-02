@@ -162,24 +162,29 @@ class Anime:
     # TODO think of a better place  for this to happen?
     def index_groups(self):
         from lib.anidb.endpoints import AuthRequest, LogoutRequest, GroupsRequest
+        import threading
 
-        AuthRequest().doRequest()
         aid = self.aid
-        groups = GroupsRequest(aid).doRequest()
-        for group in groups:
-            name = group['name']
-            gid = group['gid']
-            print(gid, name)
-            if not index.Group.exists({'name':name}):
-                print('adding group')
-                index.Group.add({'id':gid, 'name':name})
-            if not index.GroupStatus.exists({'gid':gid, 'aid':aid}):
-                print('adding status')
-                status = dict(group)
-                status['aid'] = aid
-                del status['name']
-                index.GroupStatus.add(status)
-        LogoutRequest().doRequest()
+        class GroupsThread(threading.Thread):
+            def run(self):
+                AuthRequest().doRequest()
+                groups = GroupsRequest(aid).doRequest()
+                print('hi')
+                for group in groups:
+                    name = group['name']
+                    gid = group['gid']
+                    print(gid, name)
+                    if not index.Group.exists({'name':name}):
+                        print('adding group')
+                        index.Group.add({'id':gid, 'name':name})
+                    if not index.GroupStatus.exists({'gid':gid, 'aid':aid}):
+                        print('adding status')
+                        status = dict(group)
+                        status['aid'] = aid
+                        del status['name']
+                        index.GroupStatus.add(status)
+                LogoutRequest().doRequest()
+        GroupsThread().start()
 
         return True
 
