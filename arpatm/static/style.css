@@ -226,6 +226,54 @@ body header#header form input:focus {
 footer {
   min-height: 1em;
 }
+div.index-anime {
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: top;
+  margin: 0;
+  margin-left: 4.8px;
+  margin-bottom: 9.6px;
+  padding: 4.8px;
+  width: 960px;
+  display: block;
+  margin: auto;
+  padding: 0;
+}
+div.index-anime ul {
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: top;
+  margin: 0;
+  margin-left: 4.8px;
+  margin-bottom: 9.6px;
+  padding: 4.8px;
+  width: 960px;
+  margin-left: 0;
+}
+div.search {
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: top;
+  margin: 0;
+  margin-left: 4.8px;
+  margin-bottom: 9.6px;
+  padding: 4.8px;
+  width: 960px;
+  display: block;
+  margin: auto;
+  padding: 0;
+}
+div.search ul {
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: top;
+  margin: 0;
+  margin-left: 4.8px;
+  margin-bottom: 9.6px;
+  padding: 4.8px;
+  width: 960px;
+  margin-left: 0;
+}
 div#splash {
   position: relative;
   overflow: hidden;
