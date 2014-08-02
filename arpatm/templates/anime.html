@@ -11,10 +11,15 @@
             <a id="subscribe" href="/download/anime/{{ anime['id'] }}">Subscribe</a>
             <div class="clearfix"></div>
         </div>
-        <div class="description">
+        <div class="anime-description">
             <p>
-                {{ anime['description'] }}
+                {% autoescape false %}
+                    {{ anime['description'] }}
+                {% endautoescape %}
             </p>
+
+        </div>
+        <div class="anime-groups">
             <h3>Groups</h3>
             <ul>
                 {% for group in groups %}
@@ -24,7 +29,7 @@
                 {% endfor %}
             </ul>
         </div>
-        <div class="list">
+        <div class="anime-list">
             <ul id="episodes">
                 {% for episode in episodes %}
                     {% include "episode_row.html" ignore missing %}

@@ -37,6 +37,7 @@ h1 {
 h2 {
     font-size: 2em;
     font-weight: bold;
+    line-height: 1.25em;
 }
 
 h3 {
@@ -45,6 +46,16 @@ h3 {
 
 p {
     margin-bottom: 1em;
+}
+
+a, a:visited, a:active {
+    text-decoration: none;
+    color: @cyan;
+    transition: all 0.5s;
+    
+    &:hover {
+        color: @lightcyan;
+    }
 }
 
 header#header, footer#footer {

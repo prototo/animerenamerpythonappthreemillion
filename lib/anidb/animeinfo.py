@@ -6,6 +6,7 @@ import os.path
 import xml.etree.ElementTree as etree
 import lib.index as index
 import datetime
+import re
 
 def get_date(str):
     try:
@@ -60,7 +61,10 @@ class Anime:
 
     def getDescription(self):
         description = self.root.find('description')
-        return self.elementText(description)
+        description = self.elementText(description)
+        # change "http://anidb.net/ch56259 [Kiryuuin Satsuki]" into <a href="http://anidb.net/ch56259">Kiryuuin Satsuki</a>
+        description = re.sub(r'(http[^ ]*?) \[([^\]]*?)\]', r'<a href="\1">\2</a>', description)
+        return description
 
     # images pulled to image_store/aid.jpg
     def getPicture(self):
