@@ -2,32 +2,36 @@ import urllib.request
 import gzip
 import config
 import os
+import os.path
 import xml.etree.ElementTree as ET
-from difflib import get_close_matches as closest
+from time import time
 
 titles_file_url = "http://anidb.net/api/anime-titles.xml.gz"
 file_location = os.path.join(config.data_store, '.anime-titles.xml')
 
-def download_titles_file():
-    # truncate the file if it already exists
-    with open(file_location, 'w') as output_file:
-        pass
+def getTitlesFileAge():
+    if os.path.isfile(file_location):
+        age = os.path.getmtime(file_location)
+        age = (time() - age) / 60 / 60 / 24
+        return age / 60 / 60 / 24   # return in days
+    return 9999
 
+def downloadTitlesFile():
+    # if we don't need to download a new copy just return
+    if getTitlesFileAge() < 1:
+        return True
+
+    print("Downloading titles file")
     # pull the new version, decompress it and write it out to the file
-    with open(file_location, 'a') as output_file:
-        print("open")
-        with urllib.request.urlopen(titles_file_url) as response:
-            print("url open")
-            with gzip.GzipFile(fileobj=response) as uncompressed:
-                print("starting")
-                while 1:
-                    data = uncompressed.read(1024)
-                    print(data)
-                    if not data:
-                        break
-                    output_file.write(data.decode('utf-8'))
+    urllib.request.urlretrieve(titles_file_url, file_location)
+    with gzip.open(file_location) as data:
+        titles = data.read().decode()
+        with open(file_location, 'w') as output_file:
+            output_file.write(titles)
 
-def get_title_data():
+def getTitleData():
+    downloadTitlesFile()
+
     tree = ET.parse(file_location)
     root = tree.getroot()
     data = {}
@@ -40,9 +44,8 @@ def get_title_data():
 
     return data
 
-# TODO: this needs some work...
 def search(term):
-    data = get_title_data()
+    data = getTitleData()
     tokens = term.lower().split(' ')
     results = [(title, data[title]) for title in data.keys() if all(token in title.lower() for token in tokens)]
     return results
