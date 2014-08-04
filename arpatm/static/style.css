@@ -314,8 +314,9 @@ div#splash {
   max-height: 35em;
 }
 div#splash img {
-  width: 100%;
   height: auto;
+  width: 100%;
+  display: block;
 }
 div#splash div.shadow {
   position: absolute;
@@ -340,7 +341,7 @@ div#anime {
   margin: auto;
   padding: 0;
 }
-div#anime h2#anime-name {
+div#anime div#anime-name {
   box-sizing: border-box;
   display: inline-block;
   vertical-align: top;
@@ -348,8 +349,14 @@ div#anime h2#anime-name {
   margin-left: 4.8px;
   margin-bottom: 9.6px;
   padding: 4.8px;
-  width: 636.8px;
+  width: 798.4px;
   margin-left: 0;
+  vertical-align: middle;
+}
+div#anime div#anime-name h2,
+div#anime div#anime-name p {
+  margin: 0;
+  padding: 0;
   font-weight: 200;
 }
 div#anime div#anime-actions {
@@ -360,7 +367,8 @@ div#anime div#anime-actions {
   margin-left: 4.8px;
   margin-bottom: 9.6px;
   padding: 4.8px;
-  width: 313.6px;
+  width: 152px;
+  vertical-align: middle;
 }
 div#anime div#anime-actions a#subscribe {
   background: #00bcd4;

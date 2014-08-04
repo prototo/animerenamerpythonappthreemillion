@@ -8,7 +8,10 @@
         <img src="/images/{{ splash }}" />
     </div>
     <div id="anime">
-        <h2 id="anime-name">{{ anime.name }} ({{ anime['name_jp'] }})</h2>
+        <div id="anime-name">
+            <h2>{{ anime.name }}</h2>
+            <p>{{ anime['name_jp'] }}</p>
+        </div>
         <div id="anime-actions">
             <a id="subscribe" href="/download/anime/{{ anime['id'] }}">Subscribe</a>
             <div class="clearfix"></div>

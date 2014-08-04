@@ -33,7 +33,6 @@ class Request:
     connection.sock.sendto(bytes(location.encode()), (API_ADDR, API_PORT))
     data = connection.sock.recv(1400)
     data = data.decode().strip()
-    print("Got: " + data)
 
     # update the last_request time
     connection.last_request = time()
@@ -44,7 +43,6 @@ class Request:
   # this method is blocking
   def doRequest(self):
     res = self.getResponse()
-    status = data = None
 
     if "\n" in res:
       (status, data) = res.split("\n", 1)
@@ -52,7 +50,6 @@ class Request:
       status = data = res
 
     print(status)
-    print(data)
 
     # if we got anything other than a 2XX response return None
     if not self.wasSuccessful(status):

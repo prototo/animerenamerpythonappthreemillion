@@ -51,12 +51,19 @@ class Anime:
         return self.elementText(enddate)
 
     def getTitle(self):
-        dict = {}
+        dict = {
+            "main": {}, "official": {}, "short": {}
+        }
         titles = self.root.find('titles')
         if titles is None:
             return None
         for title in titles:
-            dict[title.get('{http://www.w3.org/XML/1998/namespace}lang')] = title.text
+            type = title.get('type')
+            language = title.get('{http://www.w3.org/XML/1998/namespace}lang')
+            title = title.text
+            if not type in dict:
+                dict[type] = {}
+            dict[type][language] = title
         return dict
 
     def getDescription(self):
@@ -148,14 +155,15 @@ class Anime:
             titles = episode.get('title')
             aired_date = get_date(episode.get('airdate', None))
 
-            index.add_episode(
-                id=episode.get('id'), aid=self.aid,
-                epno=key,
-                title=titles.get('en', None),
-                title_ro=titles.get('x-jat', None),
-                title_jp=titles.get('ja', None),
-                aired_date=aired_date
-            )
+            index.Episode.add({
+                "id": episode.get('id'),
+                "aid": self.aid,
+                "epno": key,
+                "title": titles.get('en', None),
+                "title_ro": titles.get('x-jat', None),
+                "title_jp": titles.get('ja', None),
+                "aired_date": aired_date
+            })
 
         return True
 
@@ -169,16 +177,13 @@ class Anime:
             def run(self):
                 AuthRequest().doRequest()
                 groups = GroupsRequest(aid).doRequest()
-                print('hi')
+
                 for group in groups:
                     name = group['name']
                     gid = group['gid']
-                    print(gid, name)
                     if not index.Group.exists({'name':name}):
-                        print('adding group')
                         index.Group.add({'id':gid, 'name':name})
                     if not index.GroupStatus.exists({'gid':gid, 'aid':aid}):
-                        print('adding status')
                         status = dict(group)
                         status['aid'] = aid
                         del status['name']
@@ -196,20 +201,28 @@ class Anime:
             return False
 
         names = self.getTitle()
-        name = names.get('en', None)
-        name_ro = names.get('x-jat', None)
-        name_jp = names.get('ja', None)
+        main = names.get('main')
+        official = names.get('official')
+        short = names.get('short')
+
+        name = main.get(list(main.keys())[0], None)
+        name_en = official.get('en', official.get('x-jat', short.get('en', None)))
+        name_jp = official.get('ja', short.get('ja', None))
+
         start_date = get_date(self.getStartdate())
         end_date = get_date(self.getEndDate())
-
-        index.add_anime(
-            id=self.aid, name=name, name_ro=name_ro, name_jp=name_jp,
-            episode_count=self.getEpisodecount(),
-            description=self.getDescription(),
-            picture='', # self.getPicture(),
-            start_date=start_date,
-            end_date=end_date
-        )
+        print(name, name_en, name_jp)
+        index.Anime.add({
+            "id": self.aid,
+            "name": name,
+            "name_en": name_en,
+            "name_jp": name_jp,
+            "episode_count": self.getEpisodecount(),
+            "description": self.getDescription(),
+            "picture": '', # self.getPicture(),
+            "start_date": start_date,
+            "end_date": end_date
+        })
 
         return True
 

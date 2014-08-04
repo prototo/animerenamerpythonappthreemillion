@@ -26,6 +26,8 @@ def images(filename):
 def find_anime():
     term = request.args.get('term')
     results = search(term)
+    if len(results) == 1:
+        return redirect('/anime/{}'.format(results[0][1]))
     return render_template('search.html', results=results, term=term)
 
 @app.route('/torrents/episode/<eid>')

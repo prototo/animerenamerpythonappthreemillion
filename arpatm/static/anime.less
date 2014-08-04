@@ -8,8 +8,9 @@ div#splash {
     max-height: @splash-height;
 
     img {
-        width: 100%;
         height: auto;
+        width: 100%;
+        display: block;
     }
     
     div.shadow {
@@ -23,14 +24,21 @@ div#splash {
 div#anime {
     .container();
     
-    h2#anime-name {
-        .span(4);
+    div#anime-name {
+        .span(5);
         .first();
-        font-weight: 200;
+        vertical-align: middle;
+
+        h2, p {
+            margin: 0;
+            padding: 0;
+            font-weight: 200;
+        }
     }
     
     div#anime-actions {
-        .span(2);
+        .span(1);
+        vertical-align: middle;
         
         a#subscribe {
             .button();

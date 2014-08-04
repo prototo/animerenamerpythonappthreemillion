@@ -71,7 +71,7 @@ class Nyaa:
                     continue
 
                 # set up the torrent title matching regex
-                regex = "".join([group, "[^\]]*?\].*?", name, "[^\[]*?", str(epno)])
+                regex = "".join([re.escape(group), "[^\]]*?\].*?", re.escape(name), "[^\[]*?", re.escape(str(epno))])
                 # regex = re.sub('[\s|\-|\_|\.]', '.*?', regex)
                 p = re.compile(regex, re.IGNORECASE)
 
