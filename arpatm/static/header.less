@@ -1,48 +1,46 @@
 body {
-    @header-height: 4em;
-
-    header#header {
-        height: @header-height;
-        line-height: @header-height;
-        top: 0;
-        background: @main-background;
+    header#site-header {
+        .container();
         position: relative;
-        z-index: 100;
-        
-        a {
-            color: @white;
-            text-decoration: none;
+        padding: 0.25em 0;
+
+        h1#site-title {
+            .span(4);
+            .first();
+            line-height: 1em;
+            
+            a {
+                color: @white;
+                text-decoration: none;
+            }
         }
 
-        &>div {
-        
-        }
-
-        h1 {
-
-        }
-
-        form {
-            position: absolute;
-            top: 0;
-            right: 0;
+        form#site-search {
+            .span(2);
+            text-align: right;
 
             input {
                 .rounded(5px);
-
                 border: 1px solid rgba(0, 0, 0, 0.3);
                 box-sizing: border-box;
-                width: 12em;
+                background: @white;
+                width: 55%;
                 padding: 0.5em;
                 margin: 0;
-                opacity: 0.8;
+                opacity: 0.5;
                 transition: all 0.5s;
             
                 &:hover, &:focus {
                     width: 25em;
                     opacity: 1;
+                    width: 100%;
                 }
             }
+        }
+        
+        h1#site-title, form#site-search {
+            margin-bottom: 0;
+            vertical-align: middle;
         }
     }
 }

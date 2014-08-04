@@ -7,44 +7,49 @@ import os
 import re
 import lib.index as index
 
-base_uri = 'http://www.nyaa.se/?page=rss&term='
+# &cats=1_37 is for english-translated torrents only
+base_uri = 'http://www.nyaa.se/?page=rss&cats=1_37&term='
+response_cache = {}
 
 class Nyaa:
-    response_cache = {}
     names = []
     group = None
     quality = None
 
-    title_regex = '{group}.*?{name}.*?( {epno}|{epno} ).*?{quality}'
+    title_regex = '{group}.*?{name}.*?( {epno}|{epno})'
 
-    def __init__(self, names, group = 'horriblesubs', quality = 720):
-        self.names = names
-        self.group = group
-        self.quality = quality
+    def __init__(self, aid):
+        global response_cache
+        self.response_cache = response_cache
+        self.anime = index.get_anime(aid)
 
         # build the response cache of search results for all the names we have
         self.get_results()
 
     # do a search for the set anime, group and quality
     def get_results(self):
-        if not len(self.names):
+        if not self.anime:
             return False
 
-        for name in self.names:
-            # if we've already requested this name and got a response, skip it
-            if not name in self.response_cache:
+        print("Grabbing nyaa results for", self.anime)
+        for group_status in self.anime.groups:
+            group = group_status.group.name
+
+            names = self.anime.get_names()
+            for name in names:
                 # build the search request uri
                 search_uri = quote(" ").join([
                     base_uri,
-                    self.group,
-                    quote(name),
-                    str(self.quality)
+                    quote(group),
+                    quote(name)
                 ])
 
-                # do the request, cache and return the response
-                with urllib.request.urlopen(search_uri) as response:
-                    data = response.read()
-                    self.response_cache[name] = data
+                identifier = ".".join([group, name])
+                if not identifier in self.response_cache:
+                    # do the request, cache and return the response
+                    with urllib.request.urlopen(search_uri) as response:
+                        data = response.read()
+                        self.response_cache[identifier] = data
 
     # find the torrent for a single episode of this anime
     # TODO: could probably split this up some how
@@ -52,39 +57,43 @@ class Nyaa:
         if (epno < 10):
             epno = "0" + str(epno)
 
-        for name in self.names:
-            # find the response data for this name
-            data = self.response_cache[name]
-            if not data:
-                continue
+        torrents = []
+        for group_status in self.anime.groups:
+            group = group_status.group.name
 
-            # set up the torrent title matching regex
-            name_tokens = re.split('[\s|\-|\_|\.]', name)
-            regex = self.title_regex.format(
-                group = self.group,
-                name = '.*?'.join(name_tokens),
-                epno = str(epno),
-                quality = str(self.quality)
-            )
-            regex = re.compile(regex, re.IGNORECASE)
+            names = self.anime.get_names()
+            for name in names:
+                identifier = ".".join([group, name])
 
-            # get the items in the search results
-            root = ET.fromstring(data)
-            channel = root.find('channel')
-            items = channel.findall('item')
+                # find the response data for this name
+                data = self.response_cache.get(identifier, None)
+                if not data:
+                    continue
 
-            if items:
-                for item in items:
-                    title = item.find('title').text
-                    link = item.find('link').text
+                # set up the torrent title matching regex
+                regex = "".join([group, "[^\]]*?\].*?", name, "[^\[]*?", str(epno)])
+                # regex = re.sub('[\s|\-|\_|\.]', '.*?', regex)
+                p = re.compile(regex, re.IGNORECASE)
 
-                    # returns None if it doesn't match anywhere
-                    if regex.search(title):
-                        # if the regex matches on the title, it's probably right!
-                        return (link, title)
+                # get the items in the search results
+                root = ET.fromstring(data)
+                channel = root.find('channel')
+                items = channel.findall('item')
 
-        # didn't find anything for any of the set titles, return None
-        return (None, None)
+                if items:
+                    for item in items:
+                        title = item.find('title').text
+                        link = item.find('link').text
+
+                        # returns None if it doesn't match anywhere
+                        if p.search(title):
+                            # if the regex matches on the title, it's probably right!
+                            # print(link, title)
+                            torrents.append((link, title))
+
+        # sort everything by title
+        torrents = sorted(torrents, key=lambda item: item[1])
+        return torrents
 
     # expect episodes to be a list of ints
     # TODO: decide if list of ints is actually a good way to do this
@@ -101,13 +110,16 @@ class Nyaa:
         return torrents
 
     # generate a unique id for the torrent filename if one hasn't been given
-    def download_torrent(self, link, filename=str(uuid4()), eid=None):
-        print(filename, eid)
-        if ' ' in filename:
+    @classmethod
+    def download_torrent(cls, link, filename=None, eid=None):
+        if not filename:
+            filename = str(uuid4())
+        elif ' ' in filename:
             filename = filename.replace(' ', '_')
-        filename = filename + ".torrent"
+
+        filename += ".torrent"
         filepath = os.path.join(watch_dir, filename)
-        print ("downloading",link,"to",filepath)
+        print("downloading",link,"to",filepath)
 
         # download the torrent
         urllib.request.urlretrieve(link, filepath)

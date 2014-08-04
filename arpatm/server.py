@@ -26,35 +26,29 @@ def images(filename):
 def find_anime():
     term = request.args.get('term')
     results = search(term)
-    return render_template('search.html', results=results)
+    return render_template('search.html', results=results, term=term)
 
-@app.route('/download/episode/<eid>')
-def download_episode(eid):
+@app.route('/torrents/episode/<eid>')
+def episode_torrents(eid):
     episode = index.get_episode(eid)
-    anime = index.get_anime(episode.aid)
+    nyaa = Nyaa(episode.aid)
+    torrents = nyaa.find_episode(episode.epno)
 
-    nyaa = Nyaa([
-        anime.name, anime.name_ro, anime.name_jp
-    ])
-    #(link, title)
-    torrent = nyaa.find_episode(episode.epno)
+    from urllib.parse import quote
+    links = ['<a href="/download/episode/{}">{}</a>'.format(quote(link), title) for (link, title) in torrents]
 
-    if torrent[0]:
-        link, title = torrent
-        nyaa.download_torrent(link, title)
-        flash('Downloaded torrent {0}'.format(title))
-    else:
-        flash('Failed to find torrent for {0} episode {1}'.format(anime.name, episode.epno))
+    return '</br>'.join(links)
 
-    return redirect('/anime/' + str(episode.anime.id))
+@app.route('/download/episode/<path:path>')
+def download_episode(path):
+    Nyaa.download_torrent(path)
+    return redirect(request.referrer)
 
 @app.route('/download/anime/<aid>')
 def download_anime(aid):
     anime = index.get_anime(aid)
     episodes = anime.episodes
-    nyaa = Nyaa([
-        anime.name, anime.name_ro, anime.name_jp
-    ])
+    nyaa = Nyaa(aid)
     torrents = nyaa.find_episodes(episodes)
     nyaa.download_torrents(torrents)
 

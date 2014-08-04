@@ -41,9 +41,9 @@ def get_title_data():
     return data
 
 # TODO: this needs some work...
-def search(term, n=50):
+def search(term):
     data = get_title_data()
-    best = closest(term, data.keys(), n)
-    results = [ (key, data[key]) for key in best ]
+    tokens = term.lower().split(' ')
+    results = [(title, data[title]) for title in data.keys() if all(token in title.lower() for token in tokens)]
     return results
 

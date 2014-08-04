@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% block title %}{{ anime.name }}{% endblock %}
+
 {% block body %}
     <div id="splash">
         <div class="shadow"></div>
@@ -11,6 +13,7 @@
             <a id="subscribe" href="/download/anime/{{ anime['id'] }}">Subscribe</a>
             <div class="clearfix"></div>
         </div>
+
         <div class="anime-description">
             <p>
                 {% autoescape false %}
@@ -19,9 +22,7 @@
             </p>
 
         </div>
-        <div class="anime-groups">
 
-        </div>
         <div class="anime-list">
             <ul id="episodes">
                 {% for episode in episodes %}

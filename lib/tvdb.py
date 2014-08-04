@@ -69,6 +69,9 @@ class TVDB:
         with urlopen(path) as response:
             data = response.read()
 
+        if not data:
+            return None
+
         root = ET.fromstring(data)
         series = root.find('Series')
         series = element_to_dict(series)

@@ -16,16 +16,10 @@
 
     <div id="background"></div>
 
-    <header id="header">
-        <div>
-            {% include "header.html" ignore missing %}
-        </div>
-    </header>
+    {% include "header.html" ignore missing %}
 
     {% block body %}{% endblock %}
 
-    <footer id="footer">
-      {% include "footer.html" ignore missing %}
-    </footer>
+    {% include "footer.html" ignore missing %}
   </body>
 </html>

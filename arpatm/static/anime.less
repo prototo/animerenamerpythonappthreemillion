@@ -39,15 +39,11 @@ div#anime {
     }
     
     div.anime-description {
-        .span(6);
-        .first();
-    }
-    
-    div.anime-groups {
         .span(3);
         .first();
+        text-align: justify;
     }
-
+    
     div.anime-list {
         .span(3);
 
@@ -59,10 +55,25 @@ div#anime {
             li {
                 position: relative;
                 padding: 1em 0;
-                border-radius: 3px;
+                
+                @radius: 0.5em;
+                
+                &:first-child {
+                    border-top-left-radius: @radius;
+                    border-top-right-radius: @radius;
+                }
+                
+                &:last-child {
+                    border-bottom-right-radius: @radius;
+                    border-bottom-left-radius: @radius;
+                }
                 
                 &:nth-child(odd) {
                     background: @darkbluegrey;
+                }
+                
+                &:nth-child(even) {
+                    background: @bluegrey;
                 }
                 
                 div {
@@ -104,12 +115,21 @@ div#anime {
                             background-size: @icon-size*1.05 @icon-size*1.05;
                         }
                         
+                        &.loading {
+                            @-webkit-keyframes spin {
+                                0%  {-webkit-transform: rotate(0deg);}
+                                100% {-webkit-transform: rotate(360deg);}
+                            }
+                            background-image: url(icons/dark/ic_action_refresh.png) !important;
+                            -webkit-animation: spin 1s infinite linear;
+                        }
+
                         &.owned {
                             background-image: url(icons/dark/ic_action_collection.png);
                         }
                         
                         &.downloading {
-                            background-image: url(icons/dark/ic_action_data_esage.png);
+                            background-image: url(icons/dark/ic_action_data_usage.png);
                         }
                         
                         &.download {

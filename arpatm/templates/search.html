@@ -2,8 +2,9 @@
 
 {% block body %}
 <div class="search">
+    <p>{{ results|length }} results for {{ term }}</p>
     <ul>
-        {% for result in results %}
+        {% for result in results|sort %}
         <li>
             <a href="/anime/{{ result[1] }}">{{ result[0] }}</a>
         </li>

@@ -189,39 +189,71 @@ footer#footer {
 .clearfix {
   clear: both;
 }
-body header#header {
-  height: 4em;
-  line-height: 4em;
-  top: 0;
-  background: #212121;
+body header#site-header {
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: top;
+  margin: 0;
+  margin-left: 4.8px;
+  margin-bottom: 9.6px;
+  padding: 4.8px;
+  width: 960px;
+  display: block;
+  margin: auto;
+  padding: 0;
   position: relative;
-  z-index: 100;
+  padding: 0.25em 0;
 }
-body header#header a {
+body header#site-header h1#site-title {
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: top;
+  margin: 0;
+  margin-left: 4.8px;
+  margin-bottom: 9.6px;
+  padding: 4.8px;
+  width: 636.8px;
+  margin-left: 0;
+  line-height: 1em;
+}
+body header#site-header h1#site-title a {
   color: #fafafa;
   text-decoration: none;
 }
-body header#header form {
-  position: absolute;
-  top: 0;
-  right: 0;
+body header#site-header form#site-search {
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: top;
+  margin: 0;
+  margin-left: 4.8px;
+  margin-bottom: 9.6px;
+  padding: 4.8px;
+  width: 313.6px;
+  text-align: right;
 }
-body header#header form input {
+body header#site-header form#site-search input {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
   border: 1px solid rgba(0, 0, 0, 0.3);
   box-sizing: border-box;
-  width: 12em;
+  background: #fafafa;
+  width: 55%;
   padding: 0.5em;
   margin: 0;
-  opacity: 0.8;
+  opacity: 0.5;
   transition: all 0.5s;
 }
-body header#header form input:hover,
-body header#header form input:focus {
+body header#site-header form#site-search input:hover,
+body header#site-header form#site-search input:focus {
   width: 25em;
   opacity: 1;
+  width: 100%;
+}
+body header#site-header h1#site-title,
+body header#site-header form#site-search {
+  margin-bottom: 0;
+  vertical-align: middle;
 }
 footer {
   min-height: 1em;
@@ -353,19 +385,9 @@ div#anime div.anime-description {
   margin-left: 4.8px;
   margin-bottom: 9.6px;
   padding: 4.8px;
-  width: 960px;
-  margin-left: 0;
-}
-div#anime div.anime-groups {
-  box-sizing: border-box;
-  display: inline-block;
-  vertical-align: top;
-  margin: 0;
-  margin-left: 4.8px;
-  margin-bottom: 9.6px;
-  padding: 4.8px;
   width: 475.2px;
   margin-left: 0;
+  text-align: justify;
 }
 div#anime div.anime-list {
   box-sizing: border-box;
@@ -383,10 +405,20 @@ div#anime div.anime-list ul#episodes p {
 div#anime div.anime-list ul#episodes li {
   position: relative;
   padding: 1em 0;
-  border-radius: 3px;
+}
+div#anime div.anime-list ul#episodes li:first-child {
+  border-top-left-radius: 0.5em;
+  border-top-right-radius: 0.5em;
+}
+div#anime div.anime-list ul#episodes li:last-child {
+  border-bottom-right-radius: 0.5em;
+  border-bottom-left-radius: 0.5em;
 }
 div#anime div.anime-list ul#episodes li:nth-child(odd) {
   background: #263238;
+}
+div#anime div.anime-list ul#episodes li:nth-child(even) {
+  background: #607d8b;
 }
 div#anime div.anime-list ul#episodes li div {
   display: inline-block;
@@ -422,11 +454,23 @@ div#anime div.anime-list ul#episodes li div.episode-state .icon:hover {
   opacity: 1;
   background-size: 2.1em 2.1em;
 }
+div#anime div.anime-list ul#episodes li div.episode-state .icon.loading {
+  background-image: url(icons/dark/ic_action_refresh.png) !important;
+  -webkit-animation: spin 1s infinite linear;
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
 div#anime div.anime-list ul#episodes li div.episode-state .icon.owned {
   background-image: url(icons/dark/ic_action_collection.png);
 }
 div#anime div.anime-list ul#episodes li div.episode-state .icon.downloading {
-  background-image: url(icons/dark/ic_action_data_esage.png);
+  background-image: url(icons/dark/ic_action_data_usage.png);
 }
 div#anime div.anime-list ul#episodes li div.episode-state .icon.download {
   background-image: url(icons/dark/ic_action_download.png);

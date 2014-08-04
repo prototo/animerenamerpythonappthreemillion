@@ -16,7 +16,41 @@
         {% elif episode.download %}
             <span class="icon downloading"></span>
         {% else %}
-            <a href="/download/episode/{{ episode.id }}" class="icon download"></a>
+            <a href="/torrents/episode/{{ episode.id }}" id="{{ episode.epno }}" class="icon download"></a>
+            <script>
+                $('#{{ episode.epno }}').on('click', function() {
+                    var a = $(this);
+                    if (a.hasClass('loading') || a.data('loaded')) {
+                        return false;
+                    }
+                    a.addClass('loading').removeClass('download');
+                    $.ajax(a.prop('href'))
+                    .done(function(response) {
+                        var li = $('<li>' + response + '</li>').hide();
+                        li.find('a').on('click', function() {
+                            a.addClass('loading').removeClass('download');
+                            li.slideUp();
+                            $.ajax($(this).prop('href'))
+                            .always(function() {
+                                a.removeClass('loading');
+                            })
+                            .done(function() {
+                                a.addClass('downloading');
+                            })
+                            .fail(function() {
+                                a.addClass('download');
+                                li.slideDown();
+                            });
+                            return false;
+                        });
+                        a.parents('li').after(li);
+                        a.addClass('download').removeClass('loading');
+                        a.data('loaded', true);
+                        li.slideDown();
+                    });
+                    return false;
+                });
+            </script>
         {% endif %}
     </div>
 </li>
