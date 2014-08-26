@@ -1,5 +1,7 @@
 from urllib.request import urlopen, urlretrieve
 from urllib.parse import quote
+from urllib.error import URLError
+
 import os.path
 import xml.etree.ElementTree as ET
 from random import randint
@@ -121,7 +123,13 @@ class TVDB:
         return None
 
     def get_fanart(self, title):
-        return self.get_series_banner(title, 'fanart')
+        try:
+            return self.get_series_banner(title, 'fanart')
+        except URLError:
+            return False
 
     def get_poster(self, title):
-        return self.get_series_banner(title, 'poster')
+        try:
+            return self.get_series_banner(title, 'poster')
+        except URLError:
+            return False

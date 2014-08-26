@@ -1,4 +1,4 @@
-<li {% if episode.files|length > 0 %} class="owned" {% endif %}>
+<li class="episode {% if episode.files|length > 0 %}owned{% endif %}">
     <div class="episode-number">
         <h2>{{ episode.epno }}</h2>
     </div>

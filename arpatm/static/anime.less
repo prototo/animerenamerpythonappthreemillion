@@ -1,16 +1,22 @@
 div#splash {
-    @splash-height: 35em;
+    @splash-height: 30em;
 
     position: relative;
     overflow: hidden;
     margin-bottom: 1em;
     width: 100%;
+    background-attachment: fixed;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-position: center 0;
     max-height: @splash-height;
 
     img {
         height: auto;
         width: 100%;
         display: block;
+        visibility: hidden;
+        margin-top: @site-header-height * -1;
     }
     
     div.shadow {

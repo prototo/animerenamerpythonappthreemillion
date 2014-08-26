@@ -2,9 +2,9 @@
 
 import sys, os, re
 import config
-from endpoints import *
-import index
-from animeinfo import Anime
+from lib.anidb.endpoints import *
+import lib.models as models
+from lib.anidb.animeinfo import Anime
 import datetime
 import traceback
 
@@ -37,7 +37,7 @@ def renameEpisode(filepath, name, epno, title):
 def getEpisodeData(filepath):
   epno_regex = r"[ _-](\d{1,2})[ _-v]"
 
-  if index.file_path_exists(filepath):
+  if models.File.exists({"path":filepath}):
     print("Previously indexed", filepath)
     return False
 
@@ -52,12 +52,12 @@ def getEpisodeData(filepath):
     # index the file
     data = file_data.copy()
     data.update({ 'path' : filepath })
-    index.add_file(**data)
+    models.File.add(**data)
 
     # TODO: update the anime/episodes indexes for running shows
     # create an animeinfo object to do the HTTP API request and auto index the data for us
     aid = data['aid']
-    if not index.get_anime(aid):
+    if not models.Anime.exists({"aid":aid}):
         Anime(aid)
 
     # data = request.doRequest()

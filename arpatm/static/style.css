@@ -142,7 +142,7 @@ html {
   font-size: 16px;
   font-family: 'Open Sans', sans-serif;
   line-height: 1.5em;
-  background: #212121;
+  background: #263238;
   color: #fafafa;
 }
 h1 {
@@ -190,7 +190,6 @@ footer#footer {
   clear: both;
 }
 body header#site-header {
-  box-sizing: border-box;
   display: inline-block;
   vertical-align: top;
   margin: 0;
@@ -203,6 +202,8 @@ body header#site-header {
   padding: 0;
   position: relative;
   padding: 0.25em 0;
+  box-sizing: border-box;
+  height: 4em;
 }
 body header#site-header h1#site-title {
   box-sizing: border-box;
@@ -244,7 +245,6 @@ body header#site-header form#site-search input {
   opacity: 0.5;
   transition: all 0.5s;
 }
-body header#site-header form#site-search input:hover,
 body header#site-header form#site-search input:focus {
   width: 25em;
   opacity: 1;
@@ -295,7 +295,7 @@ div.search {
   margin: auto;
   padding: 0;
 }
-div.search ul {
+div.search p.details {
   box-sizing: border-box;
   display: inline-block;
   vertical-align: top;
@@ -306,17 +306,55 @@ div.search ul {
   width: 960px;
   margin-left: 0;
 }
+ul.anime_list {
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: top;
+  margin: 0;
+  margin-left: 4.8px;
+  margin-bottom: 9.6px;
+  padding: 4.8px;
+  width: 960px;
+  margin-left: 0;
+}
+ul.anime_list li.anime {
+  margin-bottom: 0.5em;
+  padding: 0.5em;
+  -webkit-border-radius: 0.25em;
+  -moz-border-radius: 0.25em;
+  border-radius: 0.25em;
+}
+ul.anime_list li.anime:last-child {
+  margin-bottom: 0;
+}
+ul.anime_list li.anime:nth-child(odd) {
+  background: #364850;
+}
+ul.anime_list li.anime:nth-child(even) {
+  background: #2e3d44;
+}
+ul.anime_list li.anime p.other_titles {
+  font-size: 0.7em;
+  margin: 0;
+  padding: 0 1em;
+}
 div#splash {
   position: relative;
   overflow: hidden;
   margin-bottom: 1em;
   width: 100%;
-  max-height: 35em;
+  background-attachment: fixed;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-position: center 0;
+  max-height: 30em;
 }
 div#splash img {
   height: auto;
   width: 100%;
   display: block;
+  visibility: hidden;
+  margin-top: -4em;
 }
 div#splash div.shadow {
   position: absolute;

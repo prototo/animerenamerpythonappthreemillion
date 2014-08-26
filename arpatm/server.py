@@ -3,7 +3,7 @@ import os.path
 from config import image_store
 from lib.anidb.animeinfo import Anime
 from arpatm.search import search
-import lib.index as index
+import lib.models as index
 from lib.tvdb import TVDB
 from lib.nyaa import Nyaa
 
@@ -27,12 +27,13 @@ def find_anime():
     term = request.args.get('term')
     results = search(term)
     if len(results) == 1:
-        return redirect('/anime/{}'.format(results[0][1]))
+        print(results)
+        return redirect('/anime/{}'.format(results[0]['aid']))
     return render_template('search.html', results=results, term=term)
 
 @app.route('/torrents/episode/<eid>')
 def episode_torrents(eid):
-    episode = index.get_episode(eid)
+    episode = index.Episode.get({"id":eid})
     nyaa = Nyaa(episode.aid)
     torrents = nyaa.find_episode(episode.epno)
 
@@ -48,7 +49,7 @@ def download_episode(path):
 
 @app.route('/download/anime/<aid>')
 def download_anime(aid):
-    anime = index.get_anime(aid)
+    anime = index.Anime.get({"id":aid})
     episodes = anime.episodes
     nyaa = Nyaa(aid)
     torrents = nyaa.find_episodes(episodes)
@@ -64,7 +65,7 @@ def anime(aid):
     anime = Anime(aid)
     if anime.xml == None:
         return "That AID isn't right"
-    indexed_anime = index.get_anime(aid)
+    indexed_anime = index.Anime.get({"id":aid})
     episodes = indexed_anime.episodes if indexed_anime is not None else []
 
     # get images from tvdb
@@ -79,8 +80,15 @@ def anime(aid):
 
 @app.route('/')
 def indexed_anime():
-    anime = index.get_all_anime()
-    return render_template("index/anime.html", anime=anime)
+    results = index.Anime.getAll()
+    indexed = []
+    for anime in results:
+        item = anime.__dict__
+        item['main'] = anime.get_name()
+        item['titles'] = anime.get_names()
+        indexed.append(item)
+    indexed = sorted(indexed, key=lambda anime: anime['main'])
+    return render_template("index/anime.html", indexed=indexed)
 
 def run():
     app.run(debug=True, host='0.0.0.0')

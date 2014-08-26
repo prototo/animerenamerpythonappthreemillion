@@ -3,10 +3,12 @@
 {% block title %}{{ anime.name }}{% endblock %}
 
 {% block body %}
-    <div id="splash">
+    {% if splash %}
+    <div id="splash" style="background-image: url('/images/{{ splash }}')">
         <div class="shadow"></div>
         <img src="/images/{{ splash }}" />
     </div>
+    {% endif %}
     <div id="anime">
         <div id="anime-name">
             <h2>{{ anime.name }}</h2>

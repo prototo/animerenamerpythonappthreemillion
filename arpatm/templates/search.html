@@ -2,12 +2,10 @@
 
 {% block body %}
 <div class="search">
-    <p>{{ results|length }} results for {{ term }}</p>
-    <ul>
-        {% for result in results|sort %}
-        <li>
-            <a href="/anime/{{ result[1] }}">{{ result[0] }}</a>
-        </li>
+    <p class="details">{{ results|length }} results for {{ term }}</p>
+    <ul class="anime_list">
+        {% for anime in results %}
+            {% include "anime_row.html" ignore missing %}
         {% endfor %}
     </ul>
 </div>

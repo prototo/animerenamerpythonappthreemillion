@@ -22,10 +22,24 @@ def session_scope():
   finally:
     session.close()
 
-
 Base = declarative_base()
-
 class Helper(object):
+    @classmethod
+    def exists(cls, filter):
+        with session_scope() as session:
+            q = session.query(cls).filter_by(**filter)
+            return session.query(q.exists()).scalar()
+
+    @classmethod
+    def get(cls, filter):
+        with session_scope() as session:
+            return session.query(cls).options(joinedload('*')).filter_by(**filter).scalar()
+
+    @classmethod
+    def getAll(cls):
+        with session_scope() as session:
+            return session.query(cls).options(joinedload('*')).all()
+
     @classmethod
     def add(cls, data):
         if not cls.exists(data):
@@ -33,10 +47,11 @@ class Helper(object):
                 session.add(cls(**data))
 
     @classmethod
-    def exists(cls, filter):
-        with session_scope() as session:
-            q = session.query(cls).filter_by(**filter)
-            return session.query(q.exists()).scalar()
+    def addAll(cls, items):
+        if len(items):
+            items = list(map(lambda data:cls(**data), items))
+            with session_scope() as session:
+                session.add_all(items)
 
 """
     Files table
@@ -147,32 +162,3 @@ class Anime(Base, Helper):
 
 # create all the tables that haven't been created
 Base.metadata.create_all(engine)
-
-# check a row exists in the database for
-def exists(model, attribute, value):
-  with session_scope() as session:
-    q = session.query(model).filter(attribute == value)
-    return session.query(q.exists()).scalar()
-
-
-# delete a row from the given table
-def delete(model, attribute, value):
-  with session_scope() as session:
-    q = session.query(model).filter(attribute == value).first()
-    if q:
-      session.delete(q)
-
-def get_episode(eid):
-    with session_scope() as session:
-        q = session.query(Episode).options(joinedload('*')).filter(Episode.id == eid).first()
-        return q
-
-def get_anime(aid):
-  with session_scope() as session:
-    q = session.query(Anime).options(joinedload('*')).filter(Anime.id == aid).first()
-    return q
-
-def get_all_anime():
-  with session_scope() as session:
-    q = session.query(Anime).options(joinedload('*')).all()
-    return q

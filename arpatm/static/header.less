@@ -3,6 +3,8 @@ body {
         .container();
         position: relative;
         padding: 0.25em 0;
+        box-sizing: border-box;
+        height: @site-header-height;
 
         h1#site-title {
             .span(4);
@@ -30,7 +32,7 @@ body {
                 opacity: 0.5;
                 transition: all 0.5s;
             
-                &:hover, &:focus {
+                &:focus {
                     width: 25em;
                     opacity: 1;
                     width: 100%;

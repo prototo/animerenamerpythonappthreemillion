@@ -1,0 +1,10 @@
+<li class="anime">
+    <a href="/anime/{{ anime['id'] }}">{{ anime['main'] }}</a>
+    {% if anime['titles'] | length %}
+        <p class="other_titles">{{ ", ".join(anime['titles']|sort) }}</p>
+    {% endif %}
+    {% if anime['files'] | length %}
+        <p class="files">{{ anime['files'] | length }} files</p>
+    {% endif %}
+
+</li>

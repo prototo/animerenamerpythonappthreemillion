@@ -5,7 +5,7 @@ from uuid import uuid4
 from config import torrent_watch_dir as watch_dir
 import os
 import re
-import lib.index as index
+import lib.models as index
 
 # &cats=1_37 is for english-translated torrents only
 base_uri = 'http://www.nyaa.se/?page=rss&cats=1_37&term='

@@ -4,7 +4,7 @@ from urllib.request import urlretrieve
 import httplib2
 import os.path
 import xml.etree.ElementTree as etree
-import lib.index as index
+import lib.models as index
 import datetime
 import re
 
@@ -146,6 +146,7 @@ class Anime:
     # index epiosdes from HTTP API XML data
     def index_episodes(self):
         episodes = self.getEpisodes()
+        _episodes = []
 
         for key in list(episodes.keys()):
             episode = episodes.get(key, None)
@@ -155,7 +156,7 @@ class Anime:
             titles = episode.get('title')
             aired_date = get_date(episode.get('airdate', None))
 
-            index.Episode.add({
+            _episodes.append({
                 "id": episode.get('id'),
                 "aid": self.aid,
                 "epno": key,
@@ -164,6 +165,8 @@ class Anime:
                 "title_jp": titles.get('ja', None),
                 "aired_date": aired_date
             })
+
+        index.Episode.addAll(_episodes)
 
         return True
 
@@ -197,7 +200,7 @@ class Anime:
     def index_anime(self):
         # if we've already indexed this anime, return
         # TODO: Just load this object from that data we've already stored rather than doing the API request
-        if index.get_anime(self.aid) != None:
+        if index.Anime.get({"id":self.aid}) != None:
             return False
 
         names = self.getTitle()

@@ -34,19 +34,24 @@ def getTitleData():
 
     tree = ET.parse(file_location)
     root = tree.getroot()
-    data = {}
+    data = []
 
     for anime in root:
         aid = anime.attrib['aid']
+        item = {'id': aid, 'main': '', 'titles': []}
         for title in anime:
-            key = title.text
-            data[key] = aid
+            lang = title.get('{http://www.w3.org/XML/1998/namespace}lang')
+            type = title.get('type')
+            if type == 'main':
+                item['main'] = title.text
+            if lang in ['en', 'ja', 'x-jat']:
+                item['titles'].append(title.text)
+        data.append(item)
 
-    return data
+    return sorted(data, key=lambda x: x['main'])
 
 def search(term):
     data = getTitleData()
     tokens = term.lower().split(' ')
-    results = [(title, data[title]) for title in data.keys() if all(token in title.lower() for token in tokens)]
-    return results
+    return list(filter(lambda anime: any(all(token in title.lower() for token in tokens) for title in anime['titles']), data))
 
