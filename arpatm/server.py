@@ -27,8 +27,7 @@ def find_anime():
     term = request.args.get('term')
     results = search(term)
     if len(results) == 1:
-        print(results)
-        return redirect('/anime/{}'.format(results[0]['aid']))
+        return redirect('/anime/{}'.format(results[0]['id']))
     return render_template('search.html', results=results, term=term)
 
 @app.route('/torrents/episode/<eid>')
@@ -68,15 +67,19 @@ def anime(aid):
     indexed_anime = index.Anime.get({"id":aid})
     episodes = indexed_anime.episodes if indexed_anime is not None else []
 
-    # get images from tvdb
-    splash = poster = None
-    for title in indexed_anime.get_names():
-        if not splash:
+    # get splash image from tvdb
+    splash = indexed_anime.picture
+    if not splash:
+        for title in indexed_anime.get_names():
             splash = tvdb.get_fanart(title)
-        if not poster:
-            poster = tvdb.get_poster(title)
+            if splash:
+                indexed_anime.picture = splash
+                # update the row with this picture, don't know if there's an easier way but this shouldn't happen here ideally
+                with index.session_scope() as session:
+                    session.merge(indexed_anime)
+                break
 
-    return render_template("anime.html", anime=indexed_anime, episodes=episodes, splash=splash, poster=poster)
+    return render_template("anime.html", anime=indexed_anime, episodes=episodes, splash=splash, poster=None)
 
 @app.route('/')
 def indexed_anime():
