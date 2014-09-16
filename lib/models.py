@@ -141,6 +141,7 @@ class Anime(Base, Helper):
     name = Column(String)
     name_jp = Column(String)
     name_en = Column(String)
+    name_short = Column(String)
     episode_count = Column(Integer)
     description = Column(String)
     picture = Column(String)
@@ -155,10 +156,10 @@ class Anime(Base, Helper):
         return self.get_name()
 
     def get_name(self):
-        return self.name or self.name_en or self.name_jp
+        return self.name or self.name_en or self.name_jp or self.name_short
 
     def get_names(self):
-        names = [self.name, self.name_en, self.name_jp]
+        names = [self.name, self.name_en, self.name_jp, self.name_short]
         return [name for name in names if name]
 
 """

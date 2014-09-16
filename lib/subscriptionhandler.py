@@ -44,7 +44,7 @@ class SubscriptionHandler:
 
         aid = subscription.anime.id
         nyaa = Nyaa(aid)
-        group = self.selectGroup(aid)
+        group = nyaa.get_groups()[0][0]
         # gotta wait for groups to be available 8D
         if not group:
             return False
@@ -87,20 +87,3 @@ class SubscriptionHandler:
                         break
                 if chosen:
                     Nyaa.download_torrent(chosen, eid=episode.id)
-
-    # select the best group according to amount of episodes subbed so far, and secondarily by rating
-    def selectGroup(self, aid):
-        group = engine.execute("""
-            SELECT anime.name_en, groups.name, groupstatus.rating, groupstatus.last_episode
-            FROM anime
-            JOIN groupstatus ON anime.id = groupstatus.aid
-            JOIN groups ON groupstatus.gid = groups.id
-            WHERE anime.id = {}
-            ORDER BY groupstatus.last_episode DESC, groupstatus.rating DESC;
-        """.format(aid)).first()
-        if group:
-            print("chose " + group.name + " with rating " + str(group.rating) + " and last ep " + str(group.last_episode))
-            return group.name
-        return None
-
-

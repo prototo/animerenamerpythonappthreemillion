@@ -99,6 +99,19 @@ class Nyaa:
         torrents = sorted(torrents, key=lambda item: item[0])
         return torrents
 
+    def get_groups(self):
+        count = {}
+        for item in self.response:
+            title, link = item
+            regexp = r"\[(?P<group>.*?)\].*?\[(?P<quality>.*?)\]"
+            match = re.match(regexp, title)
+            if match:
+                group = match.groupdict()['group']
+                count[group] = count.get(group, 0) + 1
+        groups = sorted(count.items(), key=lambda x: x[1])
+        groups.reverse()
+        return groups
+
     # generate a unique id for the torrent filename if one hasn't been given
     @classmethod
     def download_torrent(cls, torrent, eid=None):

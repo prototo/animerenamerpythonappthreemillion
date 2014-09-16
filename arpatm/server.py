@@ -102,7 +102,7 @@ def indexed_anime():
     return render_template("index/anime.html", indexed=indexed)
 
 def run():
-    SubscriptionHandler().start()
+    # SubscriptionHandler().start()
     app.run(debug=True, host='0.0.0.0')
 
 if __name__ == "__main__":

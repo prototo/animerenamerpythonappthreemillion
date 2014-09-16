@@ -32,7 +32,7 @@ class Anime:
 
         if self.index_anime():
             self.index_episodes()
-            self.index_groups()
+            # self.index_groups()
 
     def getType(self):
         type = self.root.find('type')
@@ -211,15 +211,16 @@ class Anime:
         name = main.get(list(main.keys())[0], None)
         name_en = official.get('en', official.get('x-jat', short.get('en', None)))
         name_jp = official.get('ja', short.get('ja', None))
+        name_short = short.get(list(short.keys())[0], None)   # the first one..?
 
         start_date = get_date(self.getStartdate())
         end_date = get_date(self.getEndDate())
-        print(name, name_en, name_jp)
         index.Anime.add({
             "id": self.aid,
             "name": name,
             "name_en": name_en,
             "name_jp": name_jp,
+            "name_short": name_short,
             "episode_count": self.getEpisodecount(),
             "description": self.getDescription(),
             "picture": '', # self.getPicture(),
