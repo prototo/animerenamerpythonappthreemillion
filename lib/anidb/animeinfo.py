@@ -211,7 +211,11 @@ class Anime:
         name = main.get(list(main.keys())[0], None)
         name_en = official.get('en', official.get('x-jat', short.get('en', None)))
         name_jp = official.get('ja', short.get('ja', None))
-        name_short = short.get(list(short.keys())[0], None)   # the first one..?
+
+        short_keys = list(short.keys())
+        name_short = None
+        if len(short_keys):
+            name_short = short.get(short_keys[0], None)   # the first one..?
 
         start_date = get_date(self.getStartdate())
         end_date = get_date(self.getEndDate())
