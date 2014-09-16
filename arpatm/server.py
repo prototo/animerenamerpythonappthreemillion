@@ -94,6 +94,8 @@ def indexed_anime():
     results = index.Anime.getAll()
     indexed = []
     for anime in results:
+        if not anime.indexed():
+            continue
         item = anime.__dict__
         item['main'] = anime.get_name()
         item['titles'] = anime.get_names()

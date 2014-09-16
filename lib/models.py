@@ -162,6 +162,11 @@ class Anime(Base, Helper):
         names = [self.name, self.name_en, self.name_jp, self.name_short]
         return [name for name in names if name]
 
+    # returns if this anime should be shown on the index page or not
+    # is subscribed, has indexed files, or downloading episodes
+    def indexed(self):
+        return False or bool(self.subscription) or bool(self.files) or any(map(lambda e: e.download, self.episodes))
+
 """
     Subscriptions table
 """
