@@ -21,6 +21,7 @@ class AuthRequest(Request):
     "clientver": CLIENT_VERSION
   }
   response_regex = r"^(?P<status>\d*) (?P<session>\w*)"
+  requires_session = False
 
   def doRequest(self):
     data = Request.doRequest(self)

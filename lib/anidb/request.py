@@ -42,6 +42,9 @@ class Request:
   # send the request and return the data we get back
   # this method is blocking
   def doRequest(self):
+    if self.requires_session and not connection.session:
+        raise Exception('This endpoint requires a session, perform an AuthRequest first')
+
     res = self.getResponse()
 
     if "\n" in res:

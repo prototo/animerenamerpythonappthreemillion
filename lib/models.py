@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, Column, ForeignKey, Integer, String, Date, desc
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship, joinedload
+from sqlalchemy.orm import sessionmaker, relationship, joinedload, backref
 
 from contextlib import contextmanager
 
@@ -45,6 +45,7 @@ class Helper(object):
         if not cls.exists(data):
             with session_scope() as session:
                 session.add(cls(**data))
+        return cls.get(data)
 
     @classmethod
     def addAll(cls, items):
@@ -102,7 +103,7 @@ class Download(Base, Helper):
     id = Column(Integer, primary_key=True)
     eid = Column(Integer, ForeignKey('episodes.id'))
 
-    episode = relationship("Episode", backref="download")
+    episode = relationship("Episode", backref=backref("download", uselist=False))
 
 """
     Groups table
@@ -159,6 +160,16 @@ class Anime(Base, Helper):
     def get_names(self):
         names = [self.name, self.name_en, self.name_jp]
         return [name for name in names if name]
+
+"""
+    Subscriptions table
+"""
+class Subscription(Base, Helper):
+    __tablename__ = "subscriptions"
+
+    id = Column(Integer, primary_key=True, nullable=False)
+    aid = Column(Integer, ForeignKey('anime.id'), unique=True, nullable=False)
+    anime = relationship("Anime", backref="subscription")
 
 # create all the tables that haven't been created
 Base.metadata.create_all(engine)

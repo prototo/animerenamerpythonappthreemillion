@@ -15,7 +15,11 @@
             <p>{{ anime['name_jp'] }}</p>
         </div>
         <div id="anime-actions">
-            <a id="subscribe" href="/download/anime/{{ anime['id'] }}">Subscribe</a>
+            {% if not anime.subscription %}
+                <a id="subscribe" href="/subscribe/{{ anime['id'] }}">Subscribe</a>
+            {% else %}
+                <span>Subscribed</span>
+            {% endif %}
             <div class="clearfix"></div>
         </div>
 
@@ -29,7 +33,7 @@
         </div>
 
         <div class="anime-list">
-            <ul id="episodes">
+            <ul class="episode_list">
                 {% for episode in episodes %}
                     {% include "episode_row.html" ignore missing %}
                 {% endfor %}

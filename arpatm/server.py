@@ -6,6 +6,7 @@ from arpatm.search import search
 import lib.models as index
 from lib.tvdb import TVDB
 from lib.nyaa import Nyaa
+from lib.subscriptionhandler import SubscriptionHandler
 
 tvdb = TVDB()
 
@@ -46,9 +47,16 @@ def download_episode(path):
     Nyaa.download_torrent(path)
     return redirect(request.referrer)
 
-@app.route('/download/anime/<aid>')
-def download_anime(aid):
+@app.route('/subscribe/<aid>')
+def subscribe(aid):
     anime = index.Anime.get({"id":aid})
+    if anime:
+        subscription = index.Subscription.add({"aid":aid})
+        SubscriptionHandler().handleSubscription(subscription)
+        return redirect('/anime/' + aid)
+    return redirect('/')
+
+    """
     episodes = anime.episodes
     nyaa = Nyaa(aid)
     torrents = nyaa.find_episodes(episodes)
@@ -56,8 +64,8 @@ def download_anime(aid):
 
     for torrent in torrents:
         flash('Downloaded torrent {0}'.format(torrent[1]))
+    """
 
-    return redirect('/anime/' + aid)
 
 @app.route('/anime/<aid>')
 def anime(aid):
@@ -94,6 +102,7 @@ def indexed_anime():
     return render_template("index/anime.html", indexed=indexed)
 
 def run():
+    SubscriptionHandler().start()
     app.run(debug=True, host='0.0.0.0')
 
 if __name__ == "__main__":

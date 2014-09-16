@@ -61,34 +61,13 @@ div#anime {
     div.anime-list {
         .span(3);
 
-        ul#episodes {
+        ul.episode_list {
             p {
                 margin: 0;
             }
 
-            li {
+            li.episode {
                 position: relative;
-                padding: 1em 0;
-                
-                @radius: 0.5em;
-                
-                &:first-child {
-                    border-top-left-radius: @radius;
-                    border-top-right-radius: @radius;
-                }
-                
-                &:last-child {
-                    border-bottom-right-radius: @radius;
-                    border-bottom-left-radius: @radius;
-                }
-                
-                &:nth-child(odd) {
-                    background: @darkbluegrey;
-                }
-                
-                &:nth-child(even) {
-                    background: @bluegrey;
-                }
                 
                 div {
                     display: inline-block;
