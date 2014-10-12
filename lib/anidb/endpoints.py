@@ -77,10 +77,10 @@ class FileRequest(Request):
     "episode_count", "name_ro", "name_jp", "name", "epno", "title", "title_ro", "title_jp", "group" # amask
   ]
 
-  def __init__(self, filename):
+  def __init__(self, filename, ed2k=None):
     # set the size and hash of the file in the request parameters
     self.params["size"] = os.path.getsize(filename)
-    self.params["ed2k"] = ed2k.hash(filename)
+    self.params["ed2k"] = ed2k if ed2k else ed2k.hash(filename)
 
 
 #get group data for aid

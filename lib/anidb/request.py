@@ -5,6 +5,9 @@ import re
 import lib.anidb.connection as connection
 from urllib.parse import urlencode
 from time import time, sleep
+from socket import timeout
+
+timeout_lengths = [5, 30, 60, 120]
 
 # The request class that all the other requests can inherit
 class Request:
@@ -13,6 +16,7 @@ class Request:
   response_regex = None
   zip_params = None
   requires_session = True # most requests do
+  retry_attempts = 0
 
   # return the location for this request in bytes format
   def getLocation(self):
@@ -30,8 +34,21 @@ class Request:
     while (time() - connection.last_request) < 2:
       sleep(1)
 
-    connection.sock.sendto(bytes(location.encode()), (API_ADDR, API_PORT))
-    data = connection.sock.recv(1400)
+    try:
+        connection.sock.settimeout(timeout_lengths[self.retry_attempts])
+        connection.sock.sendto(bytes(location.encode()), (API_ADDR, API_PORT))
+        data = connection.sock.recv(1400)
+    except timeout:
+        if self.retry_attempts >= (len(timeout_lengths) - 1):
+            print("Couldn't complete " + location)
+            return False
+        self.retry_attempts = self.retry_attempts + 1
+        print("Retrying...")
+        return self.getResponse()
+    except Exception:
+        print("There was a problem with the socket request, the internet probably disappeared")
+        return False
+
     data = data.decode().strip()
 
     # update the last_request time
