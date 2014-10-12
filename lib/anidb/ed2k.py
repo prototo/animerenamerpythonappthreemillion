@@ -5,7 +5,6 @@ import hashlib
 def hash(filename, chunk_size=9500):
   # the ed2k hash object
   ed2k_hash = hashlib.new("md4")
-  test = []
 
   with open(filename, "rb") as f:
     while True:
